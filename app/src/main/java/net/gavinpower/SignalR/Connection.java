@@ -2,13 +2,17 @@ package net.gavinpower.SignalR;
 
 import android.app.Activity;
 import android.net.NetworkInfo;
+import android.test.suitebuilder.annotation.Suppress;
 import android.util.Log;
+
+import net.gavinpower.twangr.MainActivity;
 
 import microsoft.aspnet.signalr.client.LogLevel;
 import microsoft.aspnet.signalr.client.hubs.HubProxy;
 import microsoft.aspnet.signalr.client.hubs.HubConnection;
 import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
+import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler2;
 import microsoft.aspnet.signalr.client.transport.LongPollingTransport;
 import microsoft.aspnet.signalr.client.Logger;
 
@@ -16,12 +20,12 @@ public class Connection
 {
     public HubConnection connection;
     public HubProxy distributionHub;
-    public Activity activeActivity;
+    public MainActivity activeActivity;
 
     private NetworkInfo Wifi;
     private NetworkInfo MobileData;
 
-    public Connection(String hubURL, Activity currentActivity, NetworkInfo Wifi, NetworkInfo MobileData)
+    public Connection(String hubURL, MainActivity currentActivity, NetworkInfo Wifi, NetworkInfo MobileData)
     {
         Logger logger = new Logger() {
             @Override
@@ -61,6 +65,12 @@ public class Connection
         distributionHub.invoke("TestConnection");
     }
 
+    public void Send(String name, String message)
+    {
+        distributionHub.invoke("Send", name, message);
+    }
+
+
     public void InitListeners()
     {
         distributionHub.on("ConnectionSuccessful",
@@ -70,9 +80,16 @@ public class Connection
                         Log.w("CallBack from Hub to Client", "Successful Connection");
                     }
                 });
+        distributionHub.subscribe(new Object() {
+            @SuppressWarnings("unused")
+            public void addMessage(String name, String message) {
+                Log.v("Message Recieved", "Name = " + name + ", message = " + message);
+                activeActivity.addMessageToContainer(name, message);
+            }
+        });
     }
 
-    public void changeActivity(Activity act)
+    public void changeActivity(MainActivity act)
     {
         this.activeActivity = act;
     }

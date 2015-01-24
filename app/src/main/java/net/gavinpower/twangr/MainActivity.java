@@ -2,6 +2,7 @@ package net.gavinpower.twangr;
 
 import java.util.Locale;
 
+import android.app.Activity;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.ActionBarActivity;
@@ -18,30 +19,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import net.gavinpower.SignalR.Connection;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
     SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     ViewPager mViewPager;
     Connection HubConnection;
     NetworkInfo Wifi;
     NetworkInfo MobileData;
+
+    private TableLayout messageContainer;
+    private EditText messageBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +50,29 @@ public class MainActivity extends ActionBarActivity {
 
         HubConnection = new Connection("http://37.187.35.32:8081/signalr", this, Wifi, MobileData);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        messageContainer = (TableLayout) findViewById(R.id.messageContainer);
+        messageBox = (EditText) findViewById(R.id.messageBox);
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+    }
 
+    public void addMessageToContainer(String name, String message)
+    {
+        TextView nameView = new TextView(this);
+        TextView messageView = new TextView(this);
+
+        nameView.setText(name);
+        messageView.setText(message);
+
+        messageContainer.addView(nameView);
+        messageContainer.addView(messageView);
+    }
+
+    public void Send()
+    {
+        String name = "Gavin";
+        String message = messageBox.getText().toString();
+
+        HubConnection.Send(name, message);
     }
 
 

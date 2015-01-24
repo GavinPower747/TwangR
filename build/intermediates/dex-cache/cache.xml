@@ -2,11 +2,11 @@
 <items version="2" >
 
     <item
-        jar="C:\dev\TwangR\app\libs\signalr-client-sdk-android.jar"
+        jar="C:\Users\Gavin\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="a6417809c26c61a7e208100f8284c1acdc398428">
-        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\signalr-client-sdk-android-de9722e80baddcbdf06c78eef1622188464fb78b.jar" />
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-2c95d8979ab597ad1880433be3592b071a7a6c11.jar" />
     </item>
     <item
         jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
@@ -16,18 +16,18 @@
         <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-1440507f945da8730656738b253bcee7976481cf.jar" />
     </item>
     <item
+        jar="C:\dev\TwangR\app\libs\signalr-client-sdk-android.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a6417809c26c61a7e208100f8284c1acdc398428">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\signalr-client-sdk-android-de9722e80baddcbdf06c78eef1622188464fb78b.jar" />
+    </item>
+    <item
         jar="C:\dev\TwangR\app\libs\gson-2.2.2.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="53bfcd3c8e310d1493b2691484525ed90b04e236">
         <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\gson-2.2.2-6a754a9700fb85e1d845df40e855b6459f6a5798.jar" />
-    </item>
-    <item
-        jar="C:\Users\New User\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
-        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-30ee13d291b41de2c11e177294be7b073bc3fafe.jar" />
     </item>
     <item
         jar="C:\dev\TwangR\app\libs\signalr-client-sdk.jar"
