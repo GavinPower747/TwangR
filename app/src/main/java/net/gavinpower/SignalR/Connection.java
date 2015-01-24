@@ -2,7 +2,6 @@ package net.gavinpower.SignalR;
 
 import android.app.Activity;
 import android.net.NetworkInfo;
-import android.test.suitebuilder.annotation.Suppress;
 import android.util.Log;
 
 import net.gavinpower.twangr.MainActivity;
@@ -12,7 +11,6 @@ import microsoft.aspnet.signalr.client.hubs.HubProxy;
 import microsoft.aspnet.signalr.client.hubs.HubConnection;
 import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
-import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler2;
 import microsoft.aspnet.signalr.client.transport.LongPollingTransport;
 import microsoft.aspnet.signalr.client.Logger;
 
@@ -20,12 +18,12 @@ public class Connection
 {
     public HubConnection connection;
     public HubProxy distributionHub;
-    public MainActivity activeActivity;
+    public Activity activeActivity;
 
     private NetworkInfo Wifi;
     private NetworkInfo MobileData;
 
-    public Connection(String hubURL, MainActivity currentActivity, NetworkInfo Wifi, NetworkInfo MobileData)
+    public Connection(String hubURL, Activity currentActivity, NetworkInfo Wifi, NetworkInfo MobileData)
     {
         Logger logger = new Logger() {
             @Override
@@ -84,12 +82,13 @@ public class Connection
             @SuppressWarnings("unused")
             public void addMessage(String name, String message) {
                 Log.v("Message Recieved", "Name = " + name + ", message = " + message);
-                activeActivity.addMessageToContainer(name, message);
+                if(activeActivity instanceof MainActivity)
+                    ((MainActivity) activeActivity).addMessageToContainer(name, message);
             }
         });
     }
 
-    public void changeActivity(MainActivity act)
+    public void changeActivity(Activity act)
     {
         this.activeActivity = act;
     }
