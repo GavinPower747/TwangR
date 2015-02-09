@@ -85,6 +85,11 @@ public class Connection
         distributionHub.invoke("Send", MessageID, messageUp ,sender, isSelf);
     }
 
+    public void login(String username, String password)
+    {
+        distributionHub.invoke("Login", username, password);
+    }
+
 
     public void InitListeners()
     {
@@ -116,6 +121,15 @@ public class Connection
                     unsentMessages.remove(message.getMessageID());
                 }
             }
+        });
+
+        distributionHub.subscribe(new Object() {
+            @SuppressWarnings("unused")
+            public void loginSuccessful(String username, String RealName, String NickName, String Email)
+            {
+
+            }
+
         });
     }
 

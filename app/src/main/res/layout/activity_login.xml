@@ -67,6 +67,7 @@
         android:id="@+id/loginButton"
         android:layout_alignTop="@+id/register"
         android:layout_toRightOf="@+id/Password"
-        android:layout_toEndOf="@+id/Password" />
+        android:layout_toEndOf="@+id/Password"
+        android:onClick="Login" />
 
 </RelativeLayout>
