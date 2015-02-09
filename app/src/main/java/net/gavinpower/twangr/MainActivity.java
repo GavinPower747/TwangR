@@ -1,6 +1,7 @@
 package net.gavinpower.twangr;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -50,9 +51,8 @@ public class MainActivity extends Activity {
         messageContainer.setAdapter(adaptor);
     }
 
-    public void addMessageToContainer(String name, String text)
+    public void addMessageToContainer(final Message message)
     {
-        final Message message = new Message(name, text, (name.equals(this.name)));
         runOnUiThread(new Runnable() {
             @Override
             public void run()
@@ -69,7 +69,9 @@ public class MainActivity extends Activity {
     public void Send(View view)
     {
         String message = messageBox.getText().toString();
-        HubConnection.Send(name, message);
+        Message msg = new Message(this.name + HubConnection.getMessageCount(),this.name, message, true, new Date());
+        addMessageToContainer(msg);
+        HubConnection.Send(msg);
         messageBox.setText("");
     }
 
