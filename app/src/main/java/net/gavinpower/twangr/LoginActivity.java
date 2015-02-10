@@ -1,13 +1,13 @@
 package net.gavinpower.twangr;
 
-import android.app.Application;
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import net.gavinpower.Models.User;
 import net.gavinpower.Security.AESEncrypt;
 import net.gavinpower.SignalR.Connection;
 
@@ -16,17 +16,14 @@ import java.security.GeneralSecurityException;
 
 import static net.gavinpower.Security.AESEncrypt.generateKeyFromPassword;
 import static net.gavinpower.Security.AESEncrypt.generateSalt;
-import static net.gavinpower.Security.AESEncrypt.keyString;
-import static net.gavinpower.Security.AESEncrypt.decryptString;
 import static net.gavinpower.Security.AESEncrypt.encrypt;
 import static net.gavinpower.Security.AESEncrypt.generateKey;
-import static net.gavinpower.Security.AESEncrypt.keys;
 import static net.gavinpower.Security.AESEncrypt.saltString;
 
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends Activity {
 
-    private Application TwangR;
+    private TwangR TwangR;
     private Connection connection;
 
     private EditText Username;
@@ -44,6 +41,10 @@ public class LoginActivity extends ActionBarActivity {
 
         Username = (EditText) findViewById(R.id.UserNameEdit);
         Password = (EditText) findViewById(R.id.passwordEdit);
+
+        TwangR = (TwangR) getApplication();
+        TwangR.setActivity(this);
+        connection = TwangR.getConnection();
 
         try {
             if (PASSWORD_BASED_KEY) {
@@ -66,8 +67,11 @@ public class LoginActivity extends ActionBarActivity {
         String password = Password.getText().toString();
         try
         {
-            AESEncrypt.CipherTextIvMac passwordCrypt = encrypt(password, key);
-            connection.login(username, passwordCrypt.toString());
+            if(!username.equals("GavinAdmin")) { // GavinAdmin is a seeded account to test login before the implementation of registration
+                password = encrypt(password, key).toString();
+            }
+
+            connection.login(username, password);
         }
         catch(UnsupportedEncodingException | GeneralSecurityException ex )
         {
@@ -75,26 +79,23 @@ public class LoginActivity extends ActionBarActivity {
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
-        return true;
+    public void loginSuccess(User user)
+    {
+        TwangR.setCurrentUser(user);
+        startActivity(new Intent(this, MainActivity.class));
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    public void loginFailure(String status)
+    {
+        switch(status)
+        {
+            case "PasswordIncorrect": status = "Your password is incorrect please try again"; break;
+            case "UserNotFound": status = "Incorrect username or password please try again"; break;
         }
 
-        return super.onOptionsItemSelected(item);
+        Toast toast = Toast.makeText(this, status, Toast.LENGTH_LONG);
+        toast.show();
     }
+
+
 }

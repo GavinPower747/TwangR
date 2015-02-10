@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -22,7 +23,6 @@ import net.gavinpower.SignalR.MessageListAdaptor;
 public class MainActivity extends Activity {
 
     TwangR TwangR;
-
     Connection HubConnection;
 
     private EditText messageBox;
@@ -41,6 +41,10 @@ public class MainActivity extends Activity {
 
         TwangR = ((TwangR) getApplicationContext());
         TwangR.setActivity(this);
+        if(TwangR.getCurrentUser() == null)
+        {
+            startActivity(new Intent(this, LoginActivity.class));
+        }
         HubConnection =  TwangR.getConnection();
 
         messageBox = (EditText) findViewById(R.id.messageBox);
@@ -50,6 +54,18 @@ public class MainActivity extends Activity {
         adaptor = new MessageListAdaptor(this, messageList);
         messageContainer.setAdapter(adaptor);
     }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        TwangR.setActivity(this);
+        if(TwangR.getCurrentUser() == null)
+        {
+            startActivity(new Intent(this, LoginActivity.class));
+        }
+    }
+
 
     public void addMessageToContainer(final Message message)
     {

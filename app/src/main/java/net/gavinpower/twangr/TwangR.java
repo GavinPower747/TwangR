@@ -5,16 +5,15 @@ import android.app.Application;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import net.gavinpower.Models.User;
 import net.gavinpower.SignalR.Connection;
 
-/**
- * Created by New User on 24/01/2015.
- */
 public class TwangR extends Application {
     public Connection HubConnection;
     public NetworkInfo Wifi;
     public NetworkInfo MobileData;
     public Activity currentActivity;
+    public User currentUser;
 
     @Override
     public void onCreate()
@@ -37,5 +36,13 @@ public class TwangR extends Application {
     {
         this.currentActivity = activity;
         HubConnection.changeActivity(currentActivity);
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
 }

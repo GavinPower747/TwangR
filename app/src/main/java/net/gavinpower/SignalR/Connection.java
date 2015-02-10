@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import net.gavinpower.Models.User;
+import net.gavinpower.twangr.LoginActivity;
 import net.gavinpower.twangr.MainActivity;
 
 import java.util.ArrayList;
@@ -125,11 +127,19 @@ public class Connection
 
         distributionHub.subscribe(new Object() {
             @SuppressWarnings("unused")
-            public void loginSuccessful(String username, String RealName, String NickName, String Email)
+            public void loginSuccess(int userId, String username, String RealName, String Email, String NickName)
             {
-
+                User user = new User(userId, username, RealName, Email, NickName);
+                ((LoginActivity) activeActivity).loginSuccess(user);
             }
+        });
 
+        distributionHub.subscribe(new Object() {
+            @SuppressWarnings("unused")
+            public void loginFailure(String status)
+            {
+                ((LoginActivity) activeActivity).loginFailure(status);
+            }
         });
     }
 
