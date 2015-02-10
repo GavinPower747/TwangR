@@ -4,16 +4,21 @@ import android.app.Activity;
 import android.app.Application;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
 
 import net.gavinpower.Models.User;
 import net.gavinpower.SignalR.Connection;
+import net.gavinpower.Tasks.SignalRConnection;
+
+import java.util.concurrent.ExecutionException;
 
 public class TwangR extends Application {
-    public Connection HubConnection;
+    public static Connection HubConnection;
+    public static User currentUser;
     public NetworkInfo Wifi;
     public NetworkInfo MobileData;
     public Activity currentActivity;
-    public User currentUser;
+
 
     @Override
     public void onCreate()
@@ -24,13 +29,24 @@ public class TwangR extends Application {
 
         Wifi = mgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         MobileData = mgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        HubConnection = new Connection("http://37.187.35.32:8081/signalr", currentActivity, Wifi, MobileData);
+
+        Object[] TaskParams = {"http://37.187.35.32:8081/signalr", currentActivity, Wifi, MobileData};
+        SignalRConnection ConnectionTask = new SignalRConnection();
+        try
+        {
+            HubConnection = (Connection)ConnectionTask.execute(TaskParams).get();
+        }
+        catch(InterruptedException | ExecutionException ex)
+        {
+            Toast.makeText(this, "Unable to connect to web service!", Toast.LENGTH_LONG).show();
+        }
+
     }
 
-    public Connection getConnection()
-    {
-        return this.HubConnection;
-    }
+    //public Connection getConnection()
+    //{
+    //    return this.HubConnection;
+    //}
 
     public void setActivity(Activity activity)
     {

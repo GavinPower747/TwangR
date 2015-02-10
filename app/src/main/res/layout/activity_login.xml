@@ -57,7 +57,8 @@
         android:layout_alignRight="@+id/passwordEdit"
         android:layout_alignEnd="@+id/passwordEdit"
         android:layout_marginRight="55dp"
-        android:layout_marginEnd="55dp" />
+        android:layout_marginEnd="55dp"
+        android:onClick="register" />
 
     <Button
         style="?android:attr/buttonStyleSmall"

@@ -15,23 +15,22 @@ import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
-import net.gavinpower.SignalR.Connection;
+
 import net.gavinpower.SignalR.Message;
 import net.gavinpower.SignalR.MessageListAdaptor;
 
+import static net.gavinpower.twangr.TwangR.HubConnection;
+import static net.gavinpower.twangr.TwangR.currentUser;
 
 public class MainActivity extends Activity {
 
     TwangR TwangR;
-    Connection HubConnection;
 
     private EditText messageBox;
 
     private MessageListAdaptor adaptor;
     private List<Message> messageList;
     private ListView messageContainer;
-
-    private String name = "Gavin";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,18 +40,19 @@ public class MainActivity extends Activity {
 
         TwangR = ((TwangR) getApplicationContext());
         TwangR.setActivity(this);
+
         if(TwangR.getCurrentUser() == null)
         {
             startActivity(new Intent(this, LoginActivity.class));
         }
-        HubConnection =  TwangR.getConnection();
+        else {
+            messageBox = (EditText) findViewById(R.id.messageBox);
+            messageContainer = (ListView) findViewById(R.id.list_view_messages);
 
-        messageBox = (EditText) findViewById(R.id.messageBox);
-        messageContainer = (ListView) findViewById(R.id.list_view_messages);
-
-        messageList = new ArrayList<Message>();
-        adaptor = new MessageListAdaptor(this, messageList);
-        messageContainer.setAdapter(adaptor);
+            messageList = new ArrayList<Message>();
+            adaptor = new MessageListAdaptor(this, messageList);
+            messageContainer.setAdapter(adaptor);
+        }
     }
 
     @Override
@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
     public void Send(View view)
     {
         String message = messageBox.getText().toString();
-        Message msg = new Message(this.name + HubConnection.getMessageCount(),this.name, message, true, new Date());
+        Message msg = new Message(currentUser.getUserRealName() + HubConnection.getMessageCount(), currentUser.getUserRealName(), message, true, new Date());
         addMessageToContainer(msg);
         HubConnection.Send(msg);
         messageBox.setText("");

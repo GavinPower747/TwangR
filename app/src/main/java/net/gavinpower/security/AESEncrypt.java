@@ -55,6 +55,12 @@ public class AESEncrypt {
     private static final String HMAC_ALGORITHM = "HmacSHA256";
     private static final int HMAC_KEY_LENGTH_BITS = 256;
 
+
+    public static boolean PASSWORD_BASED_KEY = true;
+    public static final String PASSWORD = "hZSS9pXiSuGSAe+O7W5jPNvsq9xmlxOfw+qJgb6wXBE=";
+
+    public static AESEncrypt.SecretKeys key;
+
     /**
      * Converts the given AES/HMAC keys into a base64 encoded string suitable for
      * storage. Sister function of keys.
