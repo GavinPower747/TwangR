@@ -6,9 +6,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.gavinpower.Models.User;
-import net.gavinpower.twangr.LoginActivity;
-import net.gavinpower.twangr.MainActivity;
-import net.gavinpower.twangr.RegisterActivity;
+import net.gavinpower.twangr.Activities.ChatActivity;
+import net.gavinpower.twangr.Activities.LoginActivity;
+import net.gavinpower.twangr.Activities.RegisterActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +19,6 @@ import microsoft.aspnet.signalr.client.hubs.HubProxy;
 import microsoft.aspnet.signalr.client.hubs.HubConnection;
 import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
-import microsoft.aspnet.signalr.client.transport.LongPollingTransport;
 import microsoft.aspnet.signalr.client.Logger;
 
 public class Connection
@@ -102,8 +101,8 @@ public class Connection
                     public void addMessage(String MessageID, String messageUp, String sender, boolean isSelf) {
                         Message message = new Message(MessageID, sender, messageUp, isSelf, new Date());
                         Log.v("Message Recieved", "Name = " + message.getSender() + ", message = " + message.getMessage());
-                        if(activeActivity instanceof MainActivity && !message.isSelf())
-                            ((MainActivity) activeActivity).addMessageToContainer(message);
+                        if(activeActivity instanceof ChatActivity && !message.isSelf())
+                            ((ChatActivity) activeActivity).addMessageToContainer(message);
                     }
                 });
 

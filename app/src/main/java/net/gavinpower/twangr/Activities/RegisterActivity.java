@@ -1,4 +1,4 @@
-package net.gavinpower.twangr;
+package net.gavinpower.twangr.Activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -9,12 +9,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import net.gavinpower.Models.User;
+import net.gavinpower.twangr.R;
+import net.gavinpower.twangr.TwangR;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
-import static net.gavinpower.twangr.TwangR.HubConnection;
-import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.Security.AESEncrypt.generateKeyFromPassword;
@@ -29,7 +29,7 @@ import static net.gavinpower.Security.AESEncrypt.key;
 
 public class RegisterActivity extends Activity {
 
-    TwangR TwangR;
+    net.gavinpower.twangr.TwangR TwangR;
 
     private EditText editUserName;
     private EditText editPassword;
@@ -127,7 +127,7 @@ public class RegisterActivity extends Activity {
     {
         loading.dismiss();
         currentUser = user;
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, ChatActivity.class));
     }
 
     public void registerFailure(String reason)

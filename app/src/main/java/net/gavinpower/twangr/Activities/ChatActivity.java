@@ -1,4 +1,4 @@
-package net.gavinpower.twangr;
+package net.gavinpower.twangr.Activities;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,13 +18,15 @@ import android.widget.ListView;
 
 import net.gavinpower.SignalR.Message;
 import net.gavinpower.SignalR.MessageListAdaptor;
+import net.gavinpower.twangr.R;
+import net.gavinpower.twangr.TwangR;
 
 import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentUser;
 
-public class MainActivity extends Activity {
+public class ChatActivity extends Activity {
 
-    TwangR TwangR;
+    net.gavinpower.twangr.TwangR TwangR;
 
     private EditText messageBox;
 
@@ -36,7 +38,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_chat);
 
         TwangR = ((TwangR) getApplicationContext());
         TwangR.setActivity(this);

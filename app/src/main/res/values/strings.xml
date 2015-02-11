@@ -21,5 +21,6 @@
     <string name="RealName">RealName:</string>
     <string name="NickName">Nick Name*:</string>
     <string name="NotRequired">* = Not required</string>
-
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_chat">ChatActivity</string>
 </resources>

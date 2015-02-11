@@ -1,4 +1,4 @@
-package net.gavinpower.twangr;
+package net.gavinpower.twangr.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import net.gavinpower.Models.User;
+import net.gavinpower.twangr.R;
+import net.gavinpower.twangr.TwangR;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
@@ -26,7 +28,7 @@ import static net.gavinpower.Security.AESEncrypt.key;
 
 public class LoginActivity extends Activity {
 
-    private TwangR TwangR;
+    private net.gavinpower.twangr.TwangR TwangR;
 
     private EditText Username;
     private EditText Password;
@@ -57,7 +59,7 @@ public class LoginActivity extends Activity {
         }
         else
         {
-            startActivity(new Intent(this, MainActivity.class));
+            loginSuccess(currentUser);
         }
     }
 
@@ -96,6 +98,7 @@ public class LoginActivity extends Activity {
     {
         TwangR.setCurrentUser(user);
         startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
     public void loginFailure(String status)
