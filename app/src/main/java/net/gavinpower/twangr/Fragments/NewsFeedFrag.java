@@ -8,9 +8,7 @@ import android.view.ViewGroup;
 
 import net.gavinpower.twangr.R;
 
-/**
- * Created by Gavin on 11/02/2015.
- */
+
 public class NewsFeedFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance)

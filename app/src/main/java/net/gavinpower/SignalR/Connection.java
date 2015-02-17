@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import microsoft.aspnet.signalr.client.ErrorCallback;
 import microsoft.aspnet.signalr.client.LogLevel;
 import microsoft.aspnet.signalr.client.hubs.HubProxy;
 import microsoft.aspnet.signalr.client.hubs.HubConnection;
@@ -79,7 +80,12 @@ public class Connection
 
     public void login(String username, String password)
     {
-        distributionHub.invoke("Login", username, password);
+        distributionHub.invoke("Login", username, password).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
     }
 
 
