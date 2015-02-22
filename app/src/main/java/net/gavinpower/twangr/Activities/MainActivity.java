@@ -14,10 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 
+import net.gavinpower.Models.Statuses;
 import net.gavinpower.twangr.Fragments.NewsFeedFrag;
 import net.gavinpower.twangr.Fragments.OnlineFriendsFrag;
 import net.gavinpower.twangr.Fragments.ProfileFrag;
 import net.gavinpower.twangr.R;
+import net.gavinpower.twangr.TwangR;
 
 import static net.gavinpower.twangr.TwangR.currentUser;
 
@@ -25,11 +27,19 @@ import static net.gavinpower.twangr.TwangR.currentUser;
 public class MainActivity extends ActionBarActivity {
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
+    TwangR twangR;
+    Statuses myPosts;
+    Statuses newsFeed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        twangR = (TwangR)getApplication();
+        twangR.setActivity(this);
+
+        myPosts = new Statuses();
+        newsFeed = new Statuses();
         if(currentUser == null)
         {
             startActivity(new Intent(this, LoginActivity.class));
@@ -42,9 +52,22 @@ public class MainActivity extends ActionBarActivity {
         mViewPager.setCurrentItem(1);
     }
 
+    public void populateNewsFeed(Statuses statuses)
+    {
+        this.newsFeed = statuses;
+    }
+
+    public void populateProfile(Statuses statuses)
+    {
+        this.myPosts = statuses;
+        ((ProfileFrag)mSectionsPagerAdapter.getItem(0)).populateMyPosts(statuses);
+    }
+
+    public Statuses getMyPosts() { return myPosts; }
+    public Statuses getNewsFeed() { return newsFeed; }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main_activity2, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
@@ -53,13 +76,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -90,11 +107,11 @@ public class MainActivity extends ActionBarActivity {
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return getString(R.string.title_section1).toUpperCase(l);
+                    return "MyTwangR";
                 case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
+                    return "NewsFeed";
                 case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
+                    return "OnlineFriends";
             }
             return null;
         }

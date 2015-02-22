@@ -28,4 +28,6 @@
     <string name="action_search">Search</string>
     <string name="MyTwangR_Friends">My Friends</string>
     <string name="MyTwangR_Edit">Edit Profile</string>
+    <string name="title_activity_single_post">SinglePost</string>
+
 </resources>

@@ -5,9 +5,11 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.gavinpower.Models.Statuses;
 import net.gavinpower.Models.User;
 import net.gavinpower.twangr.Activities.ChatActivity;
 import net.gavinpower.twangr.Activities.LoginActivity;
+import net.gavinpower.twangr.Activities.MainActivity;
 import net.gavinpower.twangr.Activities.RegisterActivity;
 
 import java.util.ArrayList;
@@ -42,7 +44,7 @@ public class Connection
                 Log.w("SignalR", s);
             }
         };
-        this.connection = new HubConnection(hubURL);
+        this.connection = new HubConnection(hubURL, "", true, logger);
         this.activeActivity = currentActivity;
         this.Wifi = Wifi;
         this.MobileData = MobileData;
@@ -87,6 +89,38 @@ public class Connection
             }
         });
     }
+
+    public void getNewsFeed(int UserId)
+    {
+        distributionHub.invoke(Statuses.class,"GetNewsFeed", UserId).done(new Action<Statuses>() {
+            @Override
+            public void run(Statuses statuses) throws Exception {
+                ((MainActivity)activeActivity).populateNewsFeed(statuses);
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
+    }
+
+    public void getMyPosts(int UserId)
+    {
+        distributionHub.invoke(Statuses.class, "GetPostsByUser", UserId).done(new Action<Statuses>() {
+            @Override
+            public void run(Statuses statuses) {
+                ((MainActivity)activeActivity).populateProfile(statuses);
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
+    }
+
+
 
 
     public void InitListeners()
