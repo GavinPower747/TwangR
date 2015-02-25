@@ -17,7 +17,7 @@ public class TwangR extends Application {
     public static User currentUser;
     public NetworkInfo Wifi;
     public NetworkInfo MobileData;
-    public Activity currentActivity;
+    public static Activity currentActivity;
 
 
     @Override
