@@ -13,6 +13,8 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
+import android.view.View;
+import android.widget.TextView;
 
 import net.gavinpower.Models.Statuses;
 import net.gavinpower.twangr.Fragments.NewsFeedFrag;
@@ -50,6 +52,17 @@ public class MainActivity extends ActionBarActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         mViewPager.setCurrentItem(1);
+
+        //TextView RealName = (TextView) findViewById(R.id.profile_username);
+        //TextView NickName = (TextView) findViewById(R.id.profile_nickname);
+
+        //RealName.setText(currentUser.getUserName());
+        //NickName.setText(currentUser.getUserNickName());
+    }
+
+    public void addPost(View view)
+    {
+        startActivity(new Intent(this, AddNewPostActivity.class));
     }
 
     public void populateNewsFeed(Statuses statuses)

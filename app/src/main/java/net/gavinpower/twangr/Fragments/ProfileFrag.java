@@ -1,12 +1,12 @@
 package net.gavinpower.twangr.Fragments;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentUser;
@@ -14,16 +14,13 @@ import static net.gavinpower.twangr.TwangR.currentActivity;
 
 import net.gavinpower.Models.Statuses;
 import net.gavinpower.SignalR.StatusListAdaptor;
+import net.gavinpower.twangr.Activities.AddNewPostActivity;
 import net.gavinpower.twangr.R;
 
 public class ProfileFrag extends Fragment {
 
     private StatusListAdaptor adaptor;
     private ListView status;
-    private Statuses statuses;
-
-    private TextView RealName;
-    private TextView NickName;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -39,6 +36,8 @@ public class ProfileFrag extends Fragment {
         HubConnection.getMyPosts(currentUser.getUserId());
     }
 
+
+
     public void populateMyPosts(final Statuses statuses)
     {
         currentActivity.runOnUiThread(new Runnable() {
@@ -47,12 +46,6 @@ public class ProfileFrag extends Fragment {
                 status = (ListView)currentActivity.findViewById(R.id.myProfileStatus);
                 adaptor = new StatusListAdaptor(currentActivity, statuses);
                 status.setAdapter(adaptor);
-
-                //RealName = (TextView) getActivity().findViewById(R.id.profile_username);
-                //NickName = (TextView) getActivity().findViewById(R.id.profile_nickname);
-
-                //RealName.setText(currentUser.getUserName());
-                //NickName.setText(currentUser.getUserNickName());
             }
         });
     }

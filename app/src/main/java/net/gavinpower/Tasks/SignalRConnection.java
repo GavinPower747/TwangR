@@ -18,7 +18,7 @@ public class SignalRConnection extends AsyncTask {
         Activity currentActivity = (Activity)params[1];
         NetworkInfo Wifi = (NetworkInfo)params[2];
         NetworkInfo MobileData = (NetworkInfo)params[3];
-        return new Connection(HubAddress, currentActivity, Wifi, MobileData);
+        return new Connection(HubAddress, Wifi, MobileData);
     }
 
     @Override

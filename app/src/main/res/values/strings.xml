@@ -29,5 +29,6 @@
     <string name="MyTwangR_Friends">My Friends</string>
     <string name="MyTwangR_Edit">Edit Profile</string>
     <string name="title_activity_single_post">SinglePost</string>
+    <string name="title_activity_add_new_post">AddNewPostActivity</string>
 
 </resources>

@@ -37,6 +37,10 @@
             android:name=".Activities.SinglePost"
             android:label="@string/title_activity_single_post" >
         </activity>
+        <activity
+            android:name=".Activities.AddNewPostActivity"
+            android:label="@string/title_activity_add_new_post" >
+        </activity>
     </application>
 
 </manifest>

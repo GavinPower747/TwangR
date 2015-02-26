@@ -24,11 +24,12 @@ import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
 import microsoft.aspnet.signalr.client.Logger;
 
+import static net.gavinpower.twangr.TwangR.currentActivity;
+
 public class Connection
 {
     public HubConnection connection;
     public HubProxy distributionHub;
-    public Activity activeActivity;
 
     public ArrayList<Message> messageList = new ArrayList<>();
     public HashMap<String, Message> unsentMessages = new HashMap<>();
@@ -36,7 +37,7 @@ public class Connection
     private NetworkInfo Wifi;
     private NetworkInfo MobileData;
 
-    public Connection(String hubURL, Activity currentActivity, NetworkInfo Wifi, NetworkInfo MobileData)
+    public Connection(String hubURL, NetworkInfo Wifi, NetworkInfo MobileData)
     {
         Logger logger = new Logger() {
             @Override
@@ -45,7 +46,6 @@ public class Connection
             }
         };
         this.connection = new HubConnection(hubURL, "", true, logger);
-        this.activeActivity = currentActivity;
         this.Wifi = Wifi;
         this.MobileData = MobileData;
         distributionHub = this.connection.createHubProxy("DistributionHub");
@@ -95,7 +95,7 @@ public class Connection
         distributionHub.invoke(Statuses.class,"GetNewsFeed", UserId).done(new Action<Statuses>() {
             @Override
             public void run(Statuses statuses) throws Exception {
-                ((MainActivity)activeActivity).populateNewsFeed(statuses);
+                ((MainActivity)currentActivity).populateNewsFeed(statuses);
             }
         }).onError(new ErrorCallback() {
             @Override
@@ -110,7 +110,7 @@ public class Connection
         distributionHub.invoke(Statuses.class, "GetPostsByUser", UserId).done(new Action<Statuses>() {
             @Override
             public void run(Statuses statuses) {
-                ((MainActivity)activeActivity).populateProfile(statuses);
+                ((MainActivity)currentActivity).populateProfile(statuses);
             }
         }).onError(new ErrorCallback() {
             @Override
@@ -120,7 +120,10 @@ public class Connection
         });
     }
 
-
+    public void insertPost(String postContent, int userId)
+    {
+        distributionHub.invoke("InsertStatus", postContent, userId);
+    }
 
 
     public void InitListeners()
@@ -141,8 +144,8 @@ public class Connection
                     public void addMessage(String MessageID, String messageUp, String sender, boolean isSelf) {
                         Message message = new Message(MessageID, sender, messageUp, isSelf, new Date());
                         Log.v("Message Recieved", "Name = " + message.getSender() + ", message = " + message.getMessage());
-                        if(activeActivity instanceof ChatActivity && !message.isSelf())
-                            ((ChatActivity) activeActivity).addMessageToContainer(message);
+                        if(currentActivity instanceof ChatActivity && !message.isSelf())
+                            ((ChatActivity) currentActivity).addMessageToContainer(message);
                     }
                 });
 
@@ -163,7 +166,7 @@ public class Connection
                     public void loginSuccess(int userId, String username, String RealName, String Email, String NickName)
                     {
                         User user = new User(userId, username, RealName, Email, NickName);
-                        ((LoginActivity) activeActivity).loginSuccess(user);
+                        ((LoginActivity) currentActivity).loginSuccess(user);
                     }
                 });
 
@@ -171,7 +174,7 @@ public class Connection
                     @SuppressWarnings("unused")
                     public void loginFailure(String status)
                     {
-                        ((LoginActivity) activeActivity).loginFailure(status);
+                        ((LoginActivity) currentActivity).loginFailure(status);
                     }
                 });
 
@@ -180,7 +183,7 @@ public class Connection
                     public void registerSuccess(int userId, String username, String RealName, String Email, String NickName)
                     {
                         User user = new User(userId, username, RealName, Email, NickName);
-                        ((RegisterActivity)activeActivity).registerSuccess(user);
+                        ((RegisterActivity)currentActivity).registerSuccess(user);
                     }
                 });
 
@@ -192,7 +195,7 @@ public class Connection
                         {
 
                         }
-                        ((RegisterActivity)activeActivity).registerFailure(reason);
+                        ((RegisterActivity)currentActivity).registerFailure(reason);
                     }
                 });
             }
@@ -211,11 +214,6 @@ public class Connection
                 return null;
             }
         }.execute(TaskParams);
-    }
-
-    public void changeActivity(Activity act)
-    {
-        this.activeActivity = act;
     }
 
     public int getMessageCount()

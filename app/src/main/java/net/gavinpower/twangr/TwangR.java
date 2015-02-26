@@ -50,8 +50,7 @@ public class TwangR extends Application {
 
     public void setActivity(Activity activity)
     {
-        this.currentActivity = activity;
-        HubConnection.changeActivity(currentActivity);
+        currentActivity = activity;
     }
 
     public User getCurrentUser() {
