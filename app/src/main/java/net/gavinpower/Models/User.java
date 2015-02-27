@@ -2,59 +2,79 @@ package net.gavinpower.Models;
 
 public class User
 {
-    private int userId;
-    private String userName;
-    private String userRealName;
-    private String userEmail;
-    private String userNickName;
+    public int UserId;
+    public String UserName;
+    public String UserPassword;
+    public String UserRealName;
+    public String UserEmail;
+    public String UserNickName;
+    public String UserStatus;
 
     public User() {}
-    public User(int userId, String userName, String userRealName, String userEmail, String userNickName)
-    {
-        this.userId = userId;
-        this.userName = userName;
-        this.userRealName = userRealName;
-        this.userEmail = userEmail;
-        this.userNickName = userNickName;
+
+    public User(int userId, String userName, String userPassword, String userRealName, String userEmail, String userNickName, String userStatus) {
+        UserId = userId;
+        UserName = userName;
+        UserPassword = userPassword;
+        UserRealName = userRealName;
+        UserEmail = userEmail;
+        UserNickName = userNickName;
+        UserStatus = userStatus;
     }
 
     public int getUserId() {
-        return userId;
+        return UserId;
     }
 
     public void setUserId(int userId) {
-        this.userId = userId;
+        UserId = userId;
     }
 
     public String getUserName() {
-        return userName;
+        return UserName;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        UserName = userName;
+    }
+
+    public String getUserPassword() {
+        return UserPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        UserPassword = userPassword;
     }
 
     public String getUserRealName() {
-        return userRealName;
+        return UserRealName;
     }
 
     public void setUserRealName(String userRealName) {
-        this.userRealName = userRealName;
+        UserRealName = userRealName;
     }
 
     public String getUserEmail() {
-        return userEmail;
+        return UserEmail;
     }
 
     public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
+        UserEmail = userEmail;
     }
 
     public String getUserNickName() {
-        return userNickName;
+        return UserNickName;
     }
 
     public void setUserNickName(String userNickName) {
-        this.userNickName = userNickName;
+        UserNickName = userNickName;
+    }
+
+    public String getUserStatus() {
+        return UserStatus;
+    }
+
+    public void setUserStatus(String userStatus) {
+        UserStatus = userStatus;
     }
 }

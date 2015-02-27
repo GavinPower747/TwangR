@@ -17,7 +17,8 @@
         android:layout_alignParentEnd="true"
         android:inputType="text|textMultiLine|textLongMessage|textAutoCorrect"
         android:layout_above="@+id/Post_Submit"
-        android:textAlignment="gravity" />
+        android:text="test"
+        android:nestedScrollingEnabled="true" />
 
     <Button
         android:layout_width="wrap_content"

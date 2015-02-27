@@ -1,12 +1,13 @@
 package net.gavinpower.SignalR;
 
-import android.app.Activity;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import net.gavinpower.Models.Statuses;
 import net.gavinpower.Models.User;
+import net.gavinpower.Models.Users;
 import net.gavinpower.twangr.Activities.ChatActivity;
 import net.gavinpower.twangr.Activities.LoginActivity;
 import net.gavinpower.twangr.Activities.MainActivity;
@@ -90,6 +91,16 @@ public class Connection
         });
     }
 
+    public void getUsersByName(String queryText)
+    {
+        distributionHub.invoke(Users.class, "GetUsersByName", queryText).done(new Action<Users>() {
+            @Override
+            public void run(Users list) throws Exception {
+                ((MainActivity)currentActivity).populateSuggestions(list);
+            }
+        });
+    }
+
     public void getNewsFeed(int UserId)
     {
         distributionHub.invoke(Statuses.class,"GetNewsFeed", UserId).done(new Action<Statuses>() {
@@ -122,7 +133,17 @@ public class Connection
 
     public void insertPost(String postContent, int userId)
     {
-        distributionHub.invoke("InsertStatus", postContent, userId);
+        distributionHub.invoke(String.class,"InsertStatus", postContent, userId).done(new Action<String>() {
+            @Override
+            public void run(String status)
+            {
+                Log.v("Insert Post", status);
+                if(!status.equals("Passed"))
+                    Toast.makeText(currentActivity, "Unable to add status", Toast.LENGTH_LONG).show();
+                else
+                    currentActivity.finish();
+            }
+        });
     }
 
 
@@ -165,7 +186,7 @@ public class Connection
                     @SuppressWarnings("unused")
                     public void loginSuccess(int userId, String username, String RealName, String Email, String NickName)
                     {
-                        User user = new User(userId, username, RealName, Email, NickName);
+                        User user = new User(userId, username, "", RealName, Email, NickName, "");
                         ((LoginActivity) currentActivity).loginSuccess(user);
                     }
                 });
@@ -182,7 +203,7 @@ public class Connection
                     @SuppressWarnings("unused")
                     public void registerSuccess(int userId, String username, String RealName, String Email, String NickName)
                     {
-                        User user = new User(userId, username, RealName, Email, NickName);
+                        User user = new User(userId, username, RealName, Email, NickName, "", "");
                         ((RegisterActivity)currentActivity).registerSuccess(user);
                     }
                 });
@@ -191,10 +212,10 @@ public class Connection
                     @SuppressWarnings("unused")
                     public void registerFailure(String reason)
                     {
-                        switch(reason)
-                        {
-
-                        }
+//                        switch(reason)
+//                        {
+//
+//                        }
                         ((RegisterActivity)currentActivity).registerFailure(reason);
                     }
                 });

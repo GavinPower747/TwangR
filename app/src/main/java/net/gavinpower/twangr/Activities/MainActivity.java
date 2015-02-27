@@ -3,6 +3,8 @@ package net.gavinpower.twangr.Activities;
 import java.util.Locale;
 
 import android.content.Intent;
+import android.database.MatrixCursor;
+import android.provider.BaseColumns;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -14,24 +16,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 
 import net.gavinpower.Models.Statuses;
+import net.gavinpower.Models.Users;
 import net.gavinpower.twangr.Fragments.NewsFeedFrag;
 import net.gavinpower.twangr.Fragments.OnlineFriendsFrag;
 import net.gavinpower.twangr.Fragments.ProfileFrag;
 import net.gavinpower.twangr.R;
 import net.gavinpower.twangr.TwangR;
 
+import static net.gavinpower.twangr.TwangR.HubConnection;
+import static net.gavinpower.twangr.TwangR.currentActivity;
 import static net.gavinpower.twangr.TwangR.currentUser;
 
 
 public class MainActivity extends ActionBarActivity {
-    SectionsPagerAdapter mSectionsPagerAdapter;
-    ViewPager mViewPager;
-    TwangR twangR;
-    Statuses myPosts;
-    Statuses newsFeed;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
+    private TwangR twangR;
+    private Statuses myPosts;
+    private Statuses newsFeed;
+    private Users Suggestions;
+    private SimpleCursorAdapter searchAdaptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +61,18 @@ public class MainActivity extends ActionBarActivity {
 
         mViewPager.setCurrentItem(1);
 
-        //TextView RealName = (TextView) findViewById(R.id.profile_username);
-        //TextView NickName = (TextView) findViewById(R.id.profile_nickname);
+        final String[] from = new String[] {"RealName"};
+        final int[] to = new int[] {android.R.id.text1};
+        searchAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+    }
 
-        //RealName.setText(currentUser.getUserName());
-        //NickName.setText(currentUser.getUserNickName());
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        currentActivity = this;
+        HubConnection.getMyPosts(currentUser.getUserId());
+        HubConnection.getNewsFeed(currentUser.getUserId());
     }
 
     public void addPost(View view)
@@ -84,7 +99,46 @@ public class MainActivity extends ActionBarActivity {
         getMenuInflater().inflate(R.menu.menu_main_activity2, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setSuggestionsAdapter(searchAdaptor);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query)
+            {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String queryText)
+            {
+                HubConnection.getUsersByName(queryText);
+                return true;
+            }
+        });
+
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionClick(int position) { return true; }
+
+            @Override
+            public boolean onSuggestionSelect(int position)
+            {
+                //Code for opening someones profile (Use bundle to send user id)
+                return true;
+            }
+        });
         return true;
+    }
+
+    public void populateSuggestions(Users userList)
+    {
+        Suggestions = userList;
+        final MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, "RealName"});
+
+            for(int i = 0; i < Suggestions.size(); i++) {
+                c.addRow(new Object[] {i, Suggestions.get(i).getUserRealName()});
+            }
+
+        searchAdaptor.changeCursor(c);
     }
 
     @Override

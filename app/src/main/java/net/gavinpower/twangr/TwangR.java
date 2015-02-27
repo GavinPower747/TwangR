@@ -13,12 +13,12 @@ import net.gavinpower.Tasks.SignalRConnection;
 import java.util.concurrent.ExecutionException;
 
 public class TwangR extends Application {
+
     public static Connection HubConnection;
     public static User currentUser;
+    public static Activity currentActivity;
     public NetworkInfo Wifi;
     public NetworkInfo MobileData;
-    public static Activity currentActivity;
-
 
     @Override
     public void onCreate()
@@ -32,21 +32,14 @@ public class TwangR extends Application {
 
         Object[] TaskParams = {"http://37.187.35.32:8081/signalr", currentActivity, Wifi, MobileData};
         SignalRConnection ConnectionTask = new SignalRConnection();
-        try
-        {
-            HubConnection = (Connection)ConnectionTask.execute(TaskParams).get();
-        }
-        catch(InterruptedException | ExecutionException ex)
-        {
+
+        try {
+            HubConnection = (Connection) ConnectionTask.execute(TaskParams).get();
+        } catch (InterruptedException | ExecutionException ex) {
             Toast.makeText(this, "Unable to connect to web service!", Toast.LENGTH_LONG).show();
         }
 
     }
-
-    //public Connection getConnection()
-    //{
-    //    return this.HubConnection;
-    //}
 
     public void setActivity(Activity activity)
     {
