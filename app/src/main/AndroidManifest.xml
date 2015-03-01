@@ -25,21 +25,28 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".Activities.RegisterActivity"
-            android:label="@string/title_activity_register" >
+            android:label="" >
         </activity>
         <activity
             android:name=".Activities.SinglePost"
-            android:label="@string/title_activity_single_post" >
+            android:label="" >
         </activity>
         <activity
             android:name=".Activities.AddNewPostActivity"
-            android:label="@string/title_activity_add_new_post" >
+            android:label="" >
+        </activity>
+        <activity
+            android:name=".Activities.OtherProfileActivity"
+            android:label="" >
+        </activity>
+        <activity
+            android:name=".Activities.FriendsListActivity"
+            android:label="" >
         </activity>
     </application>
 

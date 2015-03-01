@@ -5,17 +5,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
-import net.gavinpower.SignalR.StatusListAdaptor;
+import net.gavinpower.ListAdaptors.StatusListAdaptor;
+import net.gavinpower.Models.Statuses;
 import net.gavinpower.twangr.R;
 
 import static net.gavinpower.twangr.TwangR.HubConnection;
+import static net.gavinpower.twangr.TwangR.currentActivity;
 import static net.gavinpower.twangr.TwangR.currentUser;
 
 
 public class NewsFeedFrag extends Fragment {
 
-    private StatusListAdaptor adapter;
+    private StatusListAdaptor adaptor;
+    private ListView listView;
 
     @Override
     public void onResume()
@@ -33,8 +37,15 @@ public class NewsFeedFrag extends Fragment {
         return rootView;
     }
 
-    public void populateView()
+    public void populateNewsFeed(final Statuses statuses)
     {
-
+        currentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listView = (ListView)currentActivity.findViewById(R.id.newsFeed);
+                adaptor = new StatusListAdaptor(currentActivity, statuses);
+                listView.setAdapter(adaptor);
+            }
+        });
     }
 }

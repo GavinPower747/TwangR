@@ -17,7 +17,6 @@
         android:layout_alignParentEnd="true"
         android:inputType="text|textMultiLine|textLongMessage|textAutoCorrect"
         android:layout_above="@+id/Post_Submit"
-        android:text="test"
         android:nestedScrollingEnabled="true" />
 
     <Button
@@ -25,17 +24,8 @@
         android:layout_height="wrap_content"
         android:text="Submit"
         android:id="@+id/Post_Submit"
+        android:onClick="addNewPost"
         android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="addNewPost" />
+        android:layout_centerHorizontal="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cancel"
-        android:id="@+id/Post_Cancel"
-        android:layout_alignTop="@+id/Post_Submit"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 </RelativeLayout>

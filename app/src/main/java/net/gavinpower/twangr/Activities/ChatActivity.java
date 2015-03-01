@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import net.gavinpower.SignalR.Message;
-import net.gavinpower.SignalR.MessageListAdaptor;
+import net.gavinpower.ListAdaptors.MessageListAdaptor;
 import net.gavinpower.twangr.R;
 import net.gavinpower.twangr.TwangR;
 

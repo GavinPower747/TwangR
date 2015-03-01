@@ -61,9 +61,9 @@ public class MainActivity extends ActionBarActivity {
 
         mViewPager.setCurrentItem(1);
 
-        final String[] from = new String[] {"RealName"};
-        final int[] to = new int[] {android.R.id.text1};
-        searchAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        final String[] Columns = new String[] {"RealName"};
+        final int[] labels = new int[] {android.R.id.text1};
+        searchAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, null, Columns, labels, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
     }
 
     @Override
@@ -73,6 +73,8 @@ public class MainActivity extends ActionBarActivity {
         currentActivity = this;
         HubConnection.getMyPosts(currentUser.getUserId());
         HubConnection.getNewsFeed(currentUser.getUserId());
+        HubConnection.getFriendsList(currentUser.getUserId());
+        HubConnection.getFriendRequests(currentUser.getUserId());
     }
 
     public void addPost(View view)
@@ -80,9 +82,15 @@ public class MainActivity extends ActionBarActivity {
         startActivity(new Intent(this, AddNewPostActivity.class));
     }
 
+    public void myFriends(View view)
+    {
+        startActivity(new Intent(this, FriendsListActivity.class));
+    }
+
     public void populateNewsFeed(Statuses statuses)
     {
         this.newsFeed = statuses;
+        ((NewsFeedFrag)mSectionsPagerAdapter.getItem(1)).populateNewsFeed(statuses);
     }
 
     public void populateProfile(Statuses statuses)
@@ -117,12 +125,21 @@ public class MainActivity extends ActionBarActivity {
 
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
-            public boolean onSuggestionClick(int position) { return true; }
+            public boolean onSuggestionClick(int position)
+            {
+                Bundle information = new Bundle();
+                Intent intent = new Intent();
+
+                information.putInt("UserId", Suggestions.get(position).getUserId());
+                intent.setClass(MainActivity.this, OtherProfileActivity.class);
+                intent.putExtras(information);
+                startActivity(intent);
+                return true;
+            }
 
             @Override
             public boolean onSuggestionSelect(int position)
             {
-                //Code for opening someones profile (Use bundle to send user id)
                 return true;
             }
         });

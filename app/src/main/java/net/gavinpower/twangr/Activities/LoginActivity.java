@@ -16,6 +16,7 @@ import java.security.GeneralSecurityException;
 
 import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentUser;
+import static net.gavinpower.twangr.TwangR.currentActivity;
 import static net.gavinpower.Security.AESEncrypt.generateKeyFromPassword;
 import static net.gavinpower.Security.AESEncrypt.generateSalt;
 import static net.gavinpower.Security.AESEncrypt.encrypt;
@@ -42,7 +43,8 @@ public class LoginActivity extends Activity {
         Password = (EditText) findViewById(R.id.passwordEdit);
 
         TwangR = (TwangR) getApplication();
-        TwangR.setActivity(this);
+        currentActivity = this;
+        TwangR.initConnection();
 
         if(currentUser == null) {
 
@@ -67,7 +69,7 @@ public class LoginActivity extends Activity {
     protected void onResume()
     {
         super.onResume();
-        TwangR.setActivity(this);
+        currentActivity = this;
     }
 
 
@@ -108,7 +110,8 @@ public class LoginActivity extends Activity {
             case "PasswordIncorrect": status = "Your password is incorrect please try again"; break;
             case "UserNotFound": status = "Incorrect username or password please try again"; break;
         }
-        Toast.makeText(this, status, Toast.LENGTH_LONG).show();
+        Toast toast = Toast.makeText(this, status, Toast.LENGTH_LONG);
+        toast.show();
 
     }
 

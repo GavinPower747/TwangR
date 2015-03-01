@@ -1,5 +1,6 @@
-package net.gavinpower.SignalR;
+package net.gavinpower.ListAdaptors;
 
+import net.gavinpower.SignalR.Message;
 import net.gavinpower.twangr.R;
 
 import android.annotation.SuppressLint;

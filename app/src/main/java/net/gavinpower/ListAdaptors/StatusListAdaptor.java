@@ -1,4 +1,4 @@
-package net.gavinpower.SignalR;
+package net.gavinpower.ListAdaptors;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -50,9 +50,11 @@ public class StatusListAdaptor extends BaseAdapter
 
         TextView Title = (TextView) convertView.findViewById(R.id.NewsStoryHeader);
         TextView Body = (TextView) convertView.findViewById(R.id.NewsStoryBody);
+        TextView TimeStamp = (TextView) convertView.findViewById(R.id.NewsStoryTimeStamp);
 
         Title.setText("" + s.getStatusAuthor());
         Body.setText(s.getStatusContent());
+        TimeStamp.setText("" + s.getLogDate());
         return convertView;
     }
 }

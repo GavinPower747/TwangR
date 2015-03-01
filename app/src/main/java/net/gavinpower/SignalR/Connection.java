@@ -11,7 +11,9 @@ import net.gavinpower.Models.Users;
 import net.gavinpower.twangr.Activities.ChatActivity;
 import net.gavinpower.twangr.Activities.LoginActivity;
 import net.gavinpower.twangr.Activities.MainActivity;
+import net.gavinpower.twangr.Activities.OtherProfileActivity;
 import net.gavinpower.twangr.Activities.RegisterActivity;
+import net.gavinpower.twangr.TwangR;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +28,10 @@ import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
 import microsoft.aspnet.signalr.client.Logger;
 
 import static net.gavinpower.twangr.TwangR.currentActivity;
+import static net.gavinpower.twangr.TwangR.currentUser;
+import static net.gavinpower.twangr.TwangR.friendList;
+import static net.gavinpower.twangr.TwangR.friendRequests;
+import static net.gavinpower.twangr.TwangR.onlineFriends;
 
 public class Connection
 {
@@ -34,6 +40,8 @@ public class Connection
 
     public ArrayList<Message> messageList = new ArrayList<>();
     public HashMap<String, Message> unsentMessages = new HashMap<>();
+
+    private TwangR TwangR;
 
     private NetworkInfo Wifi;
     private NetworkInfo MobileData;
@@ -51,11 +59,26 @@ public class Connection
         this.MobileData = MobileData;
         distributionHub = this.connection.createHubProxy("DistributionHub");
 
+        TwangR = (TwangR) currentActivity.getApplication();
+
         this.connection.start().done(new Action<Void>() {
             @Override
             public void run(Void aVoid) throws Exception {
                 InitListeners();
                 TestConnection();
+            }
+        });
+
+        this.connection.closed(new Runnable() {
+            @Override
+            public void run() {
+                connection.start().done(new Action<Void>() {
+                    @Override
+                    public void run(Void aVoid) throws Exception {
+                        InitListeners();
+                        TestConnection();
+                    }
+                });
             }
         });
 
@@ -112,6 +135,14 @@ public class Connection
             @Override
             public void onError(Throwable throwable) {
                 throwable.printStackTrace();
+                currentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        Toast toast = Toast.makeText(currentActivity, "There was an error in getting your news feed", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                });
             }
         });
     }
@@ -146,6 +177,106 @@ public class Connection
         });
     }
 
+    public void getUserById(int userId)
+    {
+        distributionHub.invoke(User.class, "GetUserByID", userId).done(new Action<User>() {
+            @Override
+            public void run(User user) {
+                ((OtherProfileActivity)currentActivity).populateUser(user);
+            }
+        });
+    }
+
+    public void getPostsByUserId(int userId)
+    {
+        distributionHub.invoke(Statuses.class, "GetPostsByUser", userId).done(new Action<Statuses>() {
+            @Override
+            public void run(Statuses statuses)
+            {
+                ((OtherProfileActivity) currentActivity).populateNewsFeed(statuses);
+            }
+        });
+    }
+
+    public void getFriendsList(int UserId)
+    {
+        distributionHub.invoke(Users.class, "GetFriendsList", UserId).done(new Action<Users>() {
+            @Override
+            public void run(Users list)
+            {
+                friendList = list;
+            }
+        });
+    }
+
+    public void sendFriendRequest(int sender, int reciever)
+    {
+        distributionHub.invoke(String.class, "SendFriendRequest", sender, reciever).done(new Action<String>() {
+            @Override
+            public void run(String rtnMsg)
+            {
+                Log.v("HubResponse", rtnMsg);
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error)
+            {
+                currentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        Toast toast = Toast.makeText(currentActivity, "There was an error in saving your Friend Request", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                });
+            }
+        });
+    }
+
+    public void acceptFriendRequest(int sender, int reciever)
+    {
+        distributionHub.invoke(String.class, "AcceptFriendRequest", sender, reciever).done(new Action<String>() {
+            @Override
+            public void run(String rtnMsg)
+            {
+                Log.v("HubResponse", rtnMsg);
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable throwable)
+            {
+                throwable.printStackTrace();
+                Toast toast = Toast.makeText(currentActivity, "There was an error accepting the friend request", Toast.LENGTH_LONG);
+                toast.show();
+            }
+        });
+    }
+
+    public void getFriendRequests(int userId)
+    {
+        distributionHub.invoke(Users.class, "GetFriendRequests", userId).done(new Action<Users>() {
+            @Override
+            public void run(Users users)
+            {
+                friendRequests = users;
+            }
+        });
+    }
+
+    public void declineFriendRequest(int Sender, int Reciever)
+    {
+        distributionHub.invoke("DeclineFriendRequest", Sender, Reciever);
+    }
+
+    public void getOnlineFriends(int userid)
+    {
+        distributionHub.invoke(Users.class, "GetOnlineFriends", userid).done(new Action<Users>() {
+            @Override
+            public void run(Users users) throws Exception {
+                onlineFriends = users;
+            }
+        });
+    }
 
     public void InitListeners()
     {
@@ -159,7 +290,14 @@ public class Connection
                                 Log.w("CallBack from Hub to Client", "Successful Connection");
                             }
                         });
+                distributionHub.subscribe(new Object() {
+                    @SuppressWarnings("unused")
+                    public void friendChangedStatus()
+                    {
+                        getOnlineFriends(currentUser.getUserId());
+                    }
 
+                });
                 distributionHub.subscribe(new Object() {
                     @SuppressWarnings("unused")
                     public void addMessage(String MessageID, String messageUp, String sender, boolean isSelf) {
@@ -217,6 +355,34 @@ public class Connection
 //
 //                        }
                         ((RegisterActivity)currentActivity).registerFailure(reason);
+                    }
+                });
+
+                distributionHub.subscribe(new Object() {
+                    @SuppressWarnings("unused")
+                    public void notifyFriendRequest(int UserId)
+                    {
+                        distributionHub.invoke(User.class, "GetUserById", UserId).done(new Action<User>() {
+                            @Override
+                            public void run(User user)
+                            {
+                                TwangR.notifyFriendRequest(user);
+                            }
+                        });
+                    }
+                });
+
+                distributionHub.subscribe(new Object() {
+                    @SuppressWarnings("unused")
+                    public void notifyFriendAccept(int UserId)
+                    {
+                        distributionHub.invoke(User.class, "GetUserById", UserId).done(new Action<User>() {
+                            @Override
+                            public void run(User user)
+                            {
+                                TwangR.notifyFriendAccept(user);
+                            }
+                        });
                     }
                 });
             }

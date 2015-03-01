@@ -5,13 +5,42 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import net.gavinpower.ListAdaptors.FriendListAdaptor;
+import net.gavinpower.ListAdaptors.StatusListAdaptor;
+import net.gavinpower.Models.Users;
 import net.gavinpower.twangr.R;
 
-/**
- * Created by Gavin on 11/02/2015.
- */
+import static net.gavinpower.twangr.TwangR.HubConnection;
+import static net.gavinpower.twangr.TwangR.currentActivity;
+import static net.gavinpower.twangr.TwangR.currentUser;
+import static net.gavinpower.twangr.TwangR.onlineFriends;
+
 public class OnlineFriendsFrag extends Fragment {
+
+    private FriendListAdaptor adaptor;
+    private ListView listView;
+
+    public void refreshOnlineFriends(final Users users)
+    {
+        currentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listView = (ListView)currentActivity.findViewById(R.id.onlinefriends);
+                adaptor = new FriendListAdaptor(currentActivity, listView, users);
+                listView.setAdapter(adaptor);
+            }
+        });
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        refreshOnlineFriends(onlineFriends);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance)
     {

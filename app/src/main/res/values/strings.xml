@@ -30,5 +30,15 @@
     <string name="MyTwangR_Edit">Edit Profile</string>
     <string name="title_activity_single_post">SinglePost</string>
     <string name="title_activity_add_new_post">AddNewPostActivity</string>
-
+    <string name="title_activity_other_profile">OtherProfileActivity</string>
+    <string name="Placeholder_profilename">Example Real Name</string>
+    <string name="Placeholder_profilenick">(Example Nickname)</string>
+    <string name="OtherProfile_AddFriend">Add Friend</string>
+    <string name="OtherProfile_Message">Message</string>
+    <string name="OtherProfile_RemoveFriend">Remove Friend</string>
+    <string name="title_activity_friends_list">FriendsListActivity</string>
+    <string name="FriendsList_RequestLabel">Friend Requests</string>
+    <string name="FriendsList_FriendsLabel">My Friends</string>
+    <string name="FriendsList_AcceptFriend">Accept</string>
+    <string name="FriendsList_DeclineFriend">Decline</string>
 </resources>

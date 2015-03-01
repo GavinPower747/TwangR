@@ -2,24 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="start"
     android:orientation="vertical"
     android:paddingBottom="5dp"
     android:paddingRight="10dp"
-    android:paddingTop="5dp" >
+    android:paddingTop="5dp"
+    android:background="@drawable/chat_message">
 
     <TextView
         android:id="@+id/NewsStoryHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:textSize="12dp"
-        android:textStyle="bold"/>
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textSize="10dp"
-        android:id="@+id/NewsStoryBody"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:id="@+id/NewsStoryBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:textSize="12sp"
+            android:layout_weight="0.5"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/NewsStoryTimeStamp"
+            android:layout_weight="0.5"/>
+    </LinearLayout>
+
 </LinearLayout>
