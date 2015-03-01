@@ -48,37 +48,43 @@ public class OtherProfileActivity extends ActionBarActivity {
         HubConnection.getPostsByUserId(UserId);
     }
 
-    public void populateUser(User user)
+    public void populateUser(final User user)
     {
         this.user = user;
-        TextView RealName = (TextView) findViewById(R.id.OtherProfile_Name);
-        TextView NickName = (TextView) findViewById(R.id.OtherProfile_NickName);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TextView RealName = (TextView) findViewById(R.id.OtherProfile_Name);
+                TextView NickName = (TextView) findViewById(R.id.OtherProfile_NickName);
 
-        RealName.setText(user.getUserRealName());
-        NickName.setText(user.getUserNickName());
+                RealName.setText(user.getUserRealName());
+                NickName.setText(user.getUserNickName());
 
-        for(int i = 0; i < friendList.size(); i++)
-        {
-            if(UserId == friendList.get(i).getUserId())
-                friend = true;
-        }
+                for(int i = 0; i < friendList.size(); i++)
+                {
+                    if(UserId == friendList.get(i).getUserId())
+                        friend = true;
+                }
 
-        for(int i = 0; i < friendRequests.size(); i++)
-        {
-            if(UserId == friendRequests.get(i).getUserId())
-                requestSent = true;
-        }
+                for(int i = 0; i < friendRequests.size(); i++)
+                {
+                    if(UserId == friendRequests.get(i).getUserId())
+                        requestSent = true;
+                }
 
-        if(friend)
-        {
-            Button friend = (Button) findViewById(R.id.OtherProfile_AddFriend);
-            friend.setText("Un-Friend");
-        }
-        else if(requestSent)
-        {
-            Button friend = (Button) findViewById(R.id.OtherProfile_AddFriend);
-            friend.setText("Request Sent");
-        }
+                if(friend)
+                {
+                    Button friend = (Button) findViewById(R.id.OtherProfile_AddFriend);
+                    friend.setText("Un-Friend");
+                }
+                else if(requestSent)
+                {
+                    Button friend = (Button) findViewById(R.id.OtherProfile_AddFriend);
+                    friend.setText("Request Sent");
+                }
+            }
+        });
+
     }
 
     public void populateNewsFeed(final Statuses statuses)

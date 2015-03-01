@@ -30,14 +30,14 @@
             android:paddingRight="10dp"
             android:paddingTop="5dp"
             android:textSize="12sp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.75"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/NewsStoryTimeStamp"
-            android:layout_weight="0.5"/>
+            android:layout_weight="0.25"/>
     </LinearLayout>
 
 </LinearLayout>
