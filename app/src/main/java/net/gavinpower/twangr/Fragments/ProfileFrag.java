@@ -12,6 +12,7 @@ import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.twangr.TwangR.currentActivity;
 
+import net.gavinpower.Models.Status;
 import net.gavinpower.Models.Statuses;
 import net.gavinpower.ListAdaptors.StatusListAdaptor;
 import net.gavinpower.twangr.R;
@@ -40,6 +41,8 @@ public class ProfileFrag extends Fragment {
         currentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if(statuses.size() == 0)
+                    statuses.add(new Status(0, "Why not post something now?", 0, 0, "You have not posted anything yet.", ""));
                 status = (ListView)currentActivity.findViewById(R.id.myProfileStatus);
                 adaptor = new StatusListAdaptor(currentActivity, statuses);
                 status.setAdapter(adaptor);

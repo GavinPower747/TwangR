@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import net.gavinpower.ListAdaptors.StatusListAdaptor;
+import net.gavinpower.Models.Status;
 import net.gavinpower.Models.Statuses;
 import net.gavinpower.twangr.R;
 
@@ -42,6 +43,8 @@ public class NewsFeedFrag extends Fragment {
         currentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if(statuses.size() == 0)
+                    statuses.add(new Status(0, "Why not post something now?", 0, 0, "You have not posted anything yet.", ""));
                 listView = (ListView)currentActivity.findViewById(R.id.newsFeed);
                 adaptor = new StatusListAdaptor(currentActivity, statuses);
                 listView.setAdapter(adaptor);

@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import net.gavinpower.Models.User;
+import net.gavinpower.Security.AESEncrypt;
 import net.gavinpower.twangr.R;
 import net.gavinpower.twangr.TwangR;
 
@@ -51,7 +52,7 @@ public class LoginActivity extends Activity {
             try {
                 if (PASSWORD_BASED_KEY) {
                     String salt = saltString(generateSalt());
-                    key = generateKeyFromPassword(PASSWORD, salt);
+                    key = AESEncrypt.keys(PASSWORD);
                 } else {
                     key = generateKey();
                 }
@@ -79,13 +80,13 @@ public class LoginActivity extends Activity {
         String password = Password.getText().toString();
         try
         {
-            if(!username.equals("GavinAdmin")) { // GavinAdmin is a seeded account to test login before the implementation of registration
+            /*if(!username.equals("GavinAdmin")) { // GavinAdmin is a seeded account to test login before the implementation of registration
                 password = encrypt(password, key).toString();
-            }
+            }*/
 
             HubConnection.login(username, password);
         }
-        catch(UnsupportedEncodingException | GeneralSecurityException ex )
+        catch(Exception ex )
         {
             ex.printStackTrace();
         }
@@ -110,8 +111,17 @@ public class LoginActivity extends Activity {
             case "PasswordIncorrect": status = "Your password is incorrect please try again"; break;
             case "UserNotFound": status = "Incorrect username or password please try again"; break;
         }
-        Toast toast = Toast.makeText(this, status, Toast.LENGTH_LONG);
-        toast.show();
+
+        final String statusString = status;
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast toast = Toast.makeText(currentActivity, statusString, Toast.LENGTH_LONG);
+                toast.show();
+            }
+        });
+
 
     }
 

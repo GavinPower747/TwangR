@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import net.gavinpower.ListAdaptors.FriendListAdaptor;
 import net.gavinpower.ListAdaptors.StatusListAdaptor;
+import net.gavinpower.Models.User;
 import net.gavinpower.Models.Users;
 import net.gavinpower.twangr.R;
 
@@ -27,6 +28,9 @@ public class OnlineFriendsFrag extends Fragment {
         currentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if(users.size() == 0)
+                    users.add(new User(0, "Try searching for more above", "", "You have no online friends :(", "", "", ""));
+
                 listView = (ListView)currentActivity.findViewById(R.id.onlinefriends);
                 adaptor = new FriendListAdaptor(currentActivity, listView, users);
                 listView.setAdapter(adaptor);
