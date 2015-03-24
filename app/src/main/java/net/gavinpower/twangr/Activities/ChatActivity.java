@@ -34,27 +34,27 @@ public class ChatActivity extends Activity {
     private List<Message> messageList;
     private ListView messageContainer;
 
+    private String ChatID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Bundle information = getIntent().getExtras();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
         TwangR = ((TwangR) getApplicationContext());
         TwangR.setActivity(this);
 
-        if(TwangR.getCurrentUser() == null)
-        {
-            startActivity(new Intent(this, LoginActivity.class));
-        }
-        else {
-            messageBox = (EditText) findViewById(R.id.messageBox);
-            messageContainer = (ListView) findViewById(R.id.list_view_messages);
+        ChatID = information.getString("ChatID");
 
-            messageList = new ArrayList<Message>();
-            adaptor = new MessageListAdaptor(this, messageList);
-            messageContainer.setAdapter(adaptor);
-        }
+        messageBox = (EditText) findViewById(R.id.messageBox);
+        messageContainer = (ListView) findViewById(R.id.list_view_messages);
+
+        messageList = new ArrayList<Message>();
+        adaptor = new MessageListAdaptor(this, messageList);
+        messageContainer.setAdapter(adaptor);
+
     }
 
     @Override
@@ -77,8 +77,6 @@ public class ChatActivity extends Activity {
             {
                 messageList.add(message);
                 adaptor.notifyDataSetChanged();
-                if(!message.isSelf())
-                    notifyUser(message);
             }
 
         });
@@ -87,28 +85,9 @@ public class ChatActivity extends Activity {
     public void Send(View view)
     {
         String message = messageBox.getText().toString();
-        Message msg = new Message(currentUser.getUserRealName() + HubConnection.getMessageCount(), currentUser.getUserRealName(), message, true, new Date());
+        Message msg = new Message(currentUser.getUserRealName() + HubConnection.getMessageCount(), currentUser.getUserRealName(), message, true, new Date(), ChatID);
         addMessageToContainer(msg);
         HubConnection.Send(msg);
         messageBox.setText("");
-    }
-
-    public void notifyUser(Message m)
-    {
-        NotificationCompat.Builder noteBuild = new NotificationCompat.Builder(this);
-        noteBuild.setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle(m.getSender())
-                .setContentText(m.getMessage());
-
-        NotificationManager noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        noteManager.notify(0, noteBuild.build());
-
-        try {
-            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-            r.play();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

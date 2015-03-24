@@ -55,5 +55,6 @@
         android:id="@+id/OtherProfile_Message"
         android:layout_alignBottom="@+id/OtherProfile_AddFriend"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:onClick="startChat" />
 </RelativeLayout>

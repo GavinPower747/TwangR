@@ -5,22 +5,23 @@ import java.util.Date;
 @SuppressWarnings("unused")
 public class Message {
 
-
     private String messageID;
     private String sender;
     private String message;
     private boolean isSelf;
     private Date TimeStamp;
+    private String ChatId;
 
     public Message() {}
 
-    public Message(String messageID, String sender, String message, boolean isSelf, Date TimeStamp)
+    public Message(String messageID, String sender, String message, boolean isSelf, Date TimeStamp, String ChatId)
     {
         this.messageID = messageID;
         this.sender = sender;
         this.message = message;
         this.isSelf = isSelf;
         this.TimeStamp = TimeStamp;
+        this.ChatId = ChatId;
     }
 
     public String getMessageID() {
@@ -61,5 +62,13 @@ public class Message {
 
     public void setTimeStamp(Date timeStamp) {
         TimeStamp = timeStamp;
+    }
+
+    public String getChatId() {
+        return ChatId;
+    }
+
+    public void setChatId(String chatId) {
+        ChatId = chatId;
     }
 }

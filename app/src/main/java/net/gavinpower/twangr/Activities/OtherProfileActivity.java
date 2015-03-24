@@ -1,5 +1,6 @@
 package net.gavinpower.twangr.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -104,6 +105,22 @@ public class OtherProfileActivity extends ActionBarActivity {
     {
         if(!friend)
             HubConnection.sendFriendRequest(currentUser.getUserId(), UserId);
+    }
+
+    public void startChat(View view)
+    {
+        HubConnection.startChat(UserId);
+    }
+
+    public void moveToChat(String chatId)
+    {
+        Bundle information = new Bundle();
+        Intent intent = new Intent();
+
+        information.putString("ChatId", chatId);
+        intent.setClass(currentActivity, ChatActivity.class);
+        intent.putExtras(information);
+        startActivity(intent);
     }
 
     @Override

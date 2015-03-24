@@ -26,6 +26,7 @@ import microsoft.aspnet.signalr.client.hubs.HubConnection;
 import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
 import microsoft.aspnet.signalr.client.Logger;
+import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 
 import static net.gavinpower.twangr.TwangR.currentActivity;
 import static net.gavinpower.twangr.TwangR.currentUser;
@@ -72,11 +73,25 @@ public class Connection
         this.connection.closed(new Runnable() {
             @Override
             public void run() {
+                currentActivity.runOnUiThread(new Runnable() {
+                    public void run()
+                    {
+                        Toast toast = Toast.makeText(currentActivity, "Connection Lost! Reconnecting.....", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                });
                 connection.start().done(new Action<Void>() {
                     @Override
                     public void run(Void aVoid) throws Exception {
                         InitListeners();
                         TestConnection();
+                        currentActivity.runOnUiThread(new Runnable() {
+                            public void run()
+                            {
+                                Toast toast = Toast.makeText(currentActivity, "Reconnected!", Toast.LENGTH_LONG);
+                                toast.show();
+                            }
+                        });
                     }
                 });
             }
@@ -94,14 +109,31 @@ public class Connection
         messageList.add(message);
         unsentMessages.put(message.getMessageID(), message);
 
-
         String MessageID = message.getMessageID();
         String messageUp = message.getMessage();
         String sender = message.getSender();
         boolean isSelf = message.isSelf();
         Date TimeStamp = message.getTimeStamp();
+        String chatID = message.getChatId();
 
-        distributionHub.invoke("Send", MessageID, messageUp ,sender, isSelf);
+        distributionHub.invoke(Message.class, "Send", MessageID, messageUp ,sender, isSelf, chatID).done(new Action<Message>()
+        {
+            @Override
+            public void run(Message message) throws Exception {
+                unsentMessages.remove(message);
+            }
+        });
+    }
+
+    public void startChat(int UserId)
+    {
+        distributionHub.invoke(String.class, "AddChat", currentUser.getUserId(), UserId).done(new Action<String>()
+        {
+            @Override
+            public void run(String chatID) throws Exception {
+                ((OtherProfileActivity)currentActivity).moveToChat(chatID);
+            }
+        });
     }
 
     public void login(String username, String password)
@@ -287,39 +319,25 @@ public class Connection
                         new SubscriptionHandler() {
                             @Override
                             public void run() {
-                                Log.w("CallBack from Hub to Client", "Successful Connection");
+                                Log.w("From Hub", "Successful Connection");
                             }
                         });
                 distributionHub.subscribe(new Object() {
                     @SuppressWarnings("unused")
-                    public void friendChangedStatus()
-                    {
+                    public void friendChangedStatus() {
                         getOnlineFriends(currentUser.getUserId());
                     }
 
                 });
-                distributionHub.subscribe(new Object() {
-                    @SuppressWarnings("unused")
-                    public void addMessage(String MessageID, String messageUp, String sender, boolean isSelf) {
-                        Message message = new Message(MessageID, sender, messageUp, isSelf, new Date());
-                        Log.v("Message Recieved", "Name = " + message.getSender() + ", message = " + message.getMessage());
-                        if(currentActivity instanceof ChatActivity && !message.isSelf())
+                distributionHub.on("addMessage", new SubscriptionHandler1<Message>() {
+                    @Override
+                    public void run(Message message) {
+                        if (currentActivity instanceof ChatActivity && !message.isSelf())
                             ((ChatActivity) currentActivity).addMessageToContainer(message);
+                        else
+                            TwangR.notifyMessage(message.getSender(), message.getMessage(), message.getChatId());
                     }
-                });
-
-                distributionHub.subscribe(new Object() {
-                    @SuppressWarnings("unused")
-                    public void messageRecieved(String MessageID, String messageUp, String sender, boolean isSelf)
-                    {
-                        Message message =  new Message(MessageID, sender, messageUp, isSelf, new Date());
-                        if(unsentMessages.containsKey(message.getMessageID()))
-                        {
-                            unsentMessages.remove(message.getMessageID());
-                        }
-                    }
-                });
-
+                }, Message.class);
                 distributionHub.subscribe(new Object() {
                     @SuppressWarnings("unused")
                     public void loginSuccess(int userId, String username, String RealName, String Email, String NickName)
