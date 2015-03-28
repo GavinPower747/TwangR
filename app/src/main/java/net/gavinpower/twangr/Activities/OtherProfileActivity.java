@@ -151,6 +151,22 @@ public class OtherProfileActivity extends ActionBarActivity {
             HubConnection.sendFriendRequest(currentUser.getUserId(), UserId);
     }
 
+    public void startChat(View view)
+    {
+        HubConnection.startChat(UserId);
+    }
+
+    public void moveToChat(String chatId)
+    {
+        Bundle information = new Bundle();
+        Intent intent = new Intent();
+
+        information.putString("ChatId", chatId);
+        intent.setClass(currentActivity, ChatActivity.class);
+        intent.putExtras(information);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_friends_list, menu);

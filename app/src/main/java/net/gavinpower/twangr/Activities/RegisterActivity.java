@@ -111,15 +111,24 @@ public class RegisterActivity extends Activity {
         }
 
         if(validated) {
+<<<<<<< HEAD
             try {
                 //userPassword = encrypt(userPassword, key).toString();
                 loading.show();
                 HubConnection.register(userName, userPassword, userEmail, userRealName, userNickName);
             }
             catch(Exception ex)
+=======
+//            try {
+                //userPassword = encrypt(userPassword, key).toString();
+                loading.show();
+                HubConnection.register(userName, userPassword, userEmail, userRealName, userNickName);
+//            }
+            /*catch(UnsupportedEncodingException | GeneralSecurityException ex)
+>>>>>>> origin/Chat
             {
                 ex.printStackTrace();
-            }
+            }*/
         }
     }
 
@@ -127,7 +136,7 @@ public class RegisterActivity extends Activity {
     {
         loading.dismiss();
         currentUser = user;
-        startActivity(new Intent(this, ChatActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     public void registerFailure(String reason)

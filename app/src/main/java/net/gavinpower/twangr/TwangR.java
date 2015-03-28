@@ -59,7 +59,34 @@ public class TwangR extends Application {
         }
     }
 
+<<<<<<< HEAD
     public static Chat chatExists(int chatee)
+=======
+    public void notifyMessage(String sender, String message, String chatId)
+    {
+        Intent notificationIntent = new Intent(this, FriendsListActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        NotificationCompat.Builder noteBuild = new NotificationCompat.Builder(this);
+        noteBuild.setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle("Message From " + sender)
+                .setContentText(message)
+                .setContentIntent(contentIntent);
+
+        NotificationManager noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        noteManager.notify(0, noteBuild.build());
+
+        try {
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone r = RingtoneManager.getRingtone(this, notification);
+            r.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void notifyFriendRequest(User requestee)
+>>>>>>> origin/Chat
     {
         for (Chat chat : activeChats) {
             for (int userId : chat.Participants) {

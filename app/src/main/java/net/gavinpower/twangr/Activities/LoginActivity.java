@@ -77,18 +77,26 @@ public class LoginActivity extends Activity {
     {
         String username = Username.getText().toString();
         String password = Password.getText().toString();
-        try
-        {
+//        try
+//        {
             if(!username.equals("GavinAdmin")) { // GavinAdmin is a seeded account to test login before the implementation of registration
                 //password = encrypt(password, key).toString();
             }
 
             HubConnection.login(username, password);
+<<<<<<< HEAD
         }
         catch(Exception ex )
         {
             ex.printStackTrace();
         }
+=======
+//        }
+//        catch(UnsupportedEncodingException | GeneralSecurityException ex )
+//        {
+//            ex.printStackTrace();
+//        }
+>>>>>>> origin/Chat
     }
 
     public void register(View registerButton)
