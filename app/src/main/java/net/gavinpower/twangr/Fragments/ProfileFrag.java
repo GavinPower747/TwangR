@@ -13,7 +13,7 @@ import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.twangr.TwangR.currentActivity;
 
 import net.gavinpower.Models.Statuses;
-import net.gavinpower.ListAdaptors.StatusListAdaptor;
+import net.gavinpower.Utilities.StatusListAdaptor;
 import net.gavinpower.twangr.R;
 
 public class ProfileFrag extends Fragment {

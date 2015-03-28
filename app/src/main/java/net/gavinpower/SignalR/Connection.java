@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import net.gavinpower.Models.Chat;
+import net.gavinpower.Models.Chats;
 import net.gavinpower.Models.Statuses;
 import net.gavinpower.Models.User;
 import net.gavinpower.Models.Users;
@@ -18,9 +20,11 @@ import net.gavinpower.twangr.TwangR;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import microsoft.aspnet.signalr.client.ErrorCallback;
 import microsoft.aspnet.signalr.client.LogLevel;
+import microsoft.aspnet.signalr.client.SignalRFuture;
 import microsoft.aspnet.signalr.client.hubs.HubProxy;
 import microsoft.aspnet.signalr.client.hubs.HubConnection;
 import microsoft.aspnet.signalr.client.Action;
@@ -32,6 +36,7 @@ import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.twangr.TwangR.friendList;
 import static net.gavinpower.twangr.TwangR.friendRequests;
 import static net.gavinpower.twangr.TwangR.onlineFriends;
+import static net.gavinpower.twangr.TwangR.activeChats;
 
 public class Connection
 {
@@ -54,9 +59,11 @@ public class Connection
                 Log.w("SignalR", s);
             }
         };
+
         this.connection = new HubConnection(hubURL, "", true, logger);
         this.Wifi = Wifi;
         this.MobileData = MobileData;
+
         distributionHub = this.connection.createHubProxy("DistributionHub");
 
         TwangR = (TwangR) currentActivity.getApplication();
@@ -66,6 +73,18 @@ public class Connection
             public void run(Void aVoid) throws Exception {
                 InitListeners();
                 TestConnection();
+            }
+        }).onError(new ErrorCallback()
+        {
+            public void onError(Throwable error)
+            {
+                connection.start().done(new Action<Void>() {
+                    @Override
+                    public void run(Void aVoid) throws Exception {
+                        InitListeners();
+                        TestConnection();
+                    }
+                });
             }
         });
 
@@ -89,19 +108,35 @@ public class Connection
         distributionHub.invoke("TestConnection");
     }
 
-    public void Send(Message message)
+    public SignalRFuture<Message> Send(Message message)
     {
         messageList.add(message);
         unsentMessages.put(message.getMessageID(), message);
-
 
         String MessageID = message.getMessageID();
         String messageUp = message.getMessage();
         String sender = message.getSender();
         boolean isSelf = message.isSelf();
         Date TimeStamp = message.getTimeStamp();
+        String ChatId = message.getChatId();
 
-        distributionHub.invoke("Send", MessageID, messageUp ,sender, isSelf);
+        return distributionHub.invoke(Message.class, "Send", MessageID, messageUp ,sender, isSelf, ChatId);
+    }
+
+    public SignalRFuture startChat(int chatee)
+    {
+        return distributionHub.invoke(String.class, "AddChat", currentUser.getUserId(), chatee);
+    }
+
+    public void getChats()
+    {
+        distributionHub.invoke(Chats.class, "GetChats", currentUser.getUserId()).done(new Action<Chats>()
+        {
+            public void run(Chats chats)
+            {
+                activeChats = chats;
+            }
+        });
     }
 
     public void login(String username, String password)
@@ -290,6 +325,7 @@ public class Connection
                                 Log.w("CallBack from Hub to Client", "Successful Connection");
                             }
                         });
+
                 distributionHub.subscribe(new Object() {
                     @SuppressWarnings("unused")
                     public void friendChangedStatus()
@@ -298,10 +334,11 @@ public class Connection
                     }
 
                 });
+
                 distributionHub.subscribe(new Object() {
                     @SuppressWarnings("unused")
-                    public void addMessage(String MessageID, String messageUp, String sender, boolean isSelf) {
-                        Message message = new Message(MessageID, sender, messageUp, isSelf, new Date());
+                    public void addMessage(String MessageID, String messageUp, String sender, boolean isSelf, String ChatId) {
+                        Message message = new Message(MessageID, sender, messageUp, isSelf, new Date(), ChatId);
                         Log.v("Message Recieved", "Name = " + message.getSender() + ", message = " + message.getMessage());
                         if(currentActivity instanceof ChatActivity && !message.isSelf())
                             ((ChatActivity) currentActivity).addMessageToContainer(message);
@@ -310,13 +347,23 @@ public class Connection
 
                 distributionHub.subscribe(new Object() {
                     @SuppressWarnings("unused")
-                    public void messageRecieved(String MessageID, String messageUp, String sender, boolean isSelf)
+                    public void messageRecieved(String MessageID, String messageUp, String sender, boolean isSelf, String ChatId)
                     {
-                        Message message =  new Message(MessageID, sender, messageUp, isSelf, new Date());
+                        Message message =  new Message(MessageID, sender, messageUp, isSelf, new Date(), ChatId);
                         if(unsentMessages.containsKey(message.getMessageID()))
                         {
                             unsentMessages.remove(message.getMessageID());
                         }
+                    }
+                });
+
+                distributionHub.subscribe(new Object() {
+                    @SuppressWarnings("unused")
+                    public void addChat(String ChatId)
+                    {
+                        Chat chat = new Chat(ChatId, new ArrayList<Integer>());
+
+                        activeChats.add(chat);
                     }
                 });
 
@@ -391,6 +438,7 @@ public class Connection
         listenerThread.start();
     }
 
+    @SuppressWarnings("unchecked")
     public void register(String userName, String userPassword, String userRealName, String userEmail, String userNickName)
     {
         Object[] TaskParams = {userName, userPassword, userRealName, userEmail, userNickName};

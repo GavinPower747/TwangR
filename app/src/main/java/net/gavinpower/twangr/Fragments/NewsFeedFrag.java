@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import net.gavinpower.ListAdaptors.StatusListAdaptor;
+import net.gavinpower.Utilities.StatusListAdaptor;
 import net.gavinpower.Models.Statuses;
 import net.gavinpower.twangr.R;
 

@@ -11,16 +11,18 @@ public class Message {
     private String message;
     private boolean isSelf;
     private Date TimeStamp;
+    private String chatId;
 
     public Message() {}
 
-    public Message(String messageID, String sender, String message, boolean isSelf, Date TimeStamp)
+    public Message(String messageID, String sender, String message, boolean isSelf, Date TimeStamp, String chatId)
     {
         this.messageID = messageID;
         this.sender = sender;
         this.message = message;
         this.isSelf = isSelf;
         this.TimeStamp = TimeStamp;
+        this.chatId = chatId;
     }
 
     public String getMessageID() {
@@ -62,4 +64,9 @@ public class Message {
     public void setTimeStamp(Date timeStamp) {
         TimeStamp = timeStamp;
     }
+
+    public String getChatId() { return this.chatId; }
+
+    public void setChatId(String chatId) { this.chatId = chatId; }
+
 }

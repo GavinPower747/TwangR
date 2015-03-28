@@ -1,5 +1,6 @@
 package net.gavinpower.twangr.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,11 +10,18 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import net.gavinpower.Models.Chat;
 import net.gavinpower.Models.Statuses;
 import net.gavinpower.Models.User;
-import net.gavinpower.ListAdaptors.StatusListAdaptor;
+import net.gavinpower.Utilities.StatusListAdaptor;
 import net.gavinpower.twangr.R;
 
+import java.util.ArrayList;
+
+import microsoft.aspnet.signalr.client.Action;
+
+import static net.gavinpower.twangr.TwangR.activeChats;
+import static net.gavinpower.twangr.TwangR.chatExists;
 import static net.gavinpower.twangr.TwangR.currentActivity;
 import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.twangr.TwangR.HubConnection;
@@ -98,6 +106,43 @@ public class OtherProfileActivity extends ActionBarActivity {
             }
         });
 
+    }
+
+    @SuppressWarnings("unchecked")
+    public void startChat(View view) {
+        final Chat chat = chatExists(user.getUserId());
+        final int chatee = user.getUserId();
+        if (chat.chatId.equals("NotFound"))
+            HubConnection.startChat(user.getUserId()).done(new Action<String>() {
+                public void run(String chatId)
+                {
+                    Intent intent = new Intent(currentActivity, ChatActivity.class);
+                    Bundle info = new Bundle();
+
+                    info.putString("ChatId", chatId);
+
+                    intent.putExtras(info);
+                    startActivity(intent);
+                    Chat newchat = new Chat();
+
+                    newchat.chatId = chatId;
+                    newchat.Participants = new ArrayList<Integer>();
+                    newchat.Participants.add(currentUser.getUserId());
+                    newchat.Participants.add(chatee);
+
+                    activeChats.add(newchat);
+                }
+            });
+        else
+        {
+            Intent intent = new Intent(currentActivity, ChatActivity.class);
+            Bundle content = new Bundle();
+
+            content.putString("ChatID", chat.chatId);
+
+            intent.putExtras(content);
+            startActivity(intent);
+        }
     }
 
     public void sendFriendRequest(View view)

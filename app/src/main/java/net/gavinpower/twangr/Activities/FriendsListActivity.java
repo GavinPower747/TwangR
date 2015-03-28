@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import net.gavinpower.ListAdaptors.FriendListAdaptor;
-import net.gavinpower.ListAdaptors.FriendRequestAdaptor;
+import net.gavinpower.Utilities.FriendListAdaptor;
+import net.gavinpower.Utilities.FriendRequestAdaptor;
 import net.gavinpower.Models.User;
 import net.gavinpower.twangr.R;
 
@@ -37,6 +37,13 @@ public class FriendsListActivity extends ActionBarActivity {
         FriendRequests = (ListView) findViewById(R.id.FriendsList_Requests);
         refreshRequestList();
         refreshFriendList();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        currentActivity = this;
     }
 
     public void refreshRequestList()

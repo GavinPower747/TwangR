@@ -1,4 +1,4 @@
-package net.gavinpower.ListAdaptors;
+package net.gavinpower.Utilities;
 
 import android.app.Activity;
 import android.content.Context;

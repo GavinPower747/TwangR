@@ -17,9 +17,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import net.gavinpower.SignalR.Message;
-import net.gavinpower.ListAdaptors.MessageListAdaptor;
+import net.gavinpower.Utilities.MessageListAdaptor;
 import net.gavinpower.twangr.R;
 import net.gavinpower.twangr.TwangR;
+
+import microsoft.aspnet.signalr.client.Action;
 
 import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentUser;
@@ -27,6 +29,9 @@ import static net.gavinpower.twangr.TwangR.currentUser;
 public class ChatActivity extends Activity {
 
     net.gavinpower.twangr.TwangR TwangR;
+
+    private String ChatId;
+    private int UserId;
 
     private EditText messageBox;
 
@@ -48,6 +53,9 @@ public class ChatActivity extends Activity {
             startActivity(new Intent(this, LoginActivity.class));
         }
         else {
+
+            ChatId = this.getIntent().getExtras().getString("ChatId");
+
             messageBox = (EditText) findViewById(R.id.messageBox);
             messageContainer = (ListView) findViewById(R.id.list_view_messages);
 
@@ -87,9 +95,15 @@ public class ChatActivity extends Activity {
     public void Send(View view)
     {
         String message = messageBox.getText().toString();
-        Message msg = new Message(currentUser.getUserRealName() + HubConnection.getMessageCount(), currentUser.getUserRealName(), message, true, new Date());
+        Message msg = new Message(currentUser.getUserRealName() + HubConnection.getMessageCount(), currentUser.getUserRealName(), message, true, new Date(), this.ChatId);
         addMessageToContainer(msg);
-        HubConnection.Send(msg);
+        HubConnection.Send(msg).done(new Action<Message>()
+        {
+            public void run(Message message)
+            {
+                //code for guaranteed delivery here
+            }
+        });
         messageBox.setText("");
     }
 

@@ -112,11 +112,11 @@ public class RegisterActivity extends Activity {
 
         if(validated) {
             try {
-                userPassword = encrypt(userPassword, key).toString();
+                //userPassword = encrypt(userPassword, key).toString();
                 loading.show();
                 HubConnection.register(userName, userPassword, userEmail, userRealName, userNickName);
             }
-            catch(UnsupportedEncodingException | GeneralSecurityException ex)
+            catch(Exception ex)
             {
                 ex.printStackTrace();
             }

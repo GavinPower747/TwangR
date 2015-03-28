@@ -75,6 +75,7 @@ public class MainActivity extends ActionBarActivity {
         HubConnection.getNewsFeed(currentUser.getUserId());
         HubConnection.getFriendsList(currentUser.getUserId());
         HubConnection.getFriendRequests(currentUser.getUserId());
+        HubConnection.getChats();
     }
 
     public void addPost(View view)

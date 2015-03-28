@@ -80,12 +80,12 @@ public class LoginActivity extends Activity {
         try
         {
             if(!username.equals("GavinAdmin")) { // GavinAdmin is a seeded account to test login before the implementation of registration
-                password = encrypt(password, key).toString();
+                //password = encrypt(password, key).toString();
             }
 
             HubConnection.login(username, password);
         }
-        catch(UnsupportedEncodingException | GeneralSecurityException ex )
+        catch(Exception ex )
         {
             ex.printStackTrace();
         }

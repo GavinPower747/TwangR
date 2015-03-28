@@ -1,4 +1,4 @@
-package net.gavinpower.ListAdaptors;
+package net.gavinpower.Utilities;
 
 import net.gavinpower.SignalR.Message;
 import net.gavinpower.twangr.R;

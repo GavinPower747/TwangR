@@ -13,12 +13,13 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import net.gavinpower.Models.Chat;
+import net.gavinpower.Models.Chats;
 import net.gavinpower.Models.User;
 import net.gavinpower.Models.Users;
 import net.gavinpower.SignalR.Connection;
 import net.gavinpower.Tasks.SignalRConnection;
 import net.gavinpower.twangr.Activities.FriendsListActivity;
-import net.gavinpower.twangr.Activities.LoginActivity;
 
 import java.util.concurrent.ExecutionException;
 
@@ -29,6 +30,7 @@ public class TwangR extends Application {
     public static Users friendList;
     public static Users friendRequests;
     public static Users onlineFriends;
+    public static Chats activeChats;
     public static Activity currentActivity;
     public NetworkInfo Wifi;
     public NetworkInfo MobileData;
@@ -42,6 +44,7 @@ public class TwangR extends Application {
         Wifi = mgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         MobileData = mgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         onlineFriends = new Users();
+        activeChats = new Chats();
     }
 
     public void initConnection()
@@ -56,48 +59,28 @@ public class TwangR extends Application {
         }
     }
 
+    public static Chat chatExists(int chatee)
+    {
+        for (Chat chat : activeChats) {
+            for (int userId : chat.Participants) {
+                if (userId == chatee)
+                    return chat;
+            }
+        }
+
+        Chat NF = new Chat();
+        NF.chatId = "NotFound";
+        return NF;
+    }
+
     public void notifyFriendRequest(User requestee)
     {
-        Intent notificationIntent = new Intent(this, FriendsListActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        NotificationCompat.Builder noteBuild = new NotificationCompat.Builder(this);
-        noteBuild.setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle("New Friend Request!")
-                .setContentText(requestee.getUserRealName() + " wants to be your friend!")
-                .setContentIntent(contentIntent);
 
-        NotificationManager noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        noteManager.notify(0, noteBuild.build());
-
-        try {
-            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone r = RingtoneManager.getRingtone(this, notification);
-            r.play();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void notifyFriendAccept(User requester)
     {
-        Intent notificationIntent = new Intent(this, FriendsListActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        NotificationCompat.Builder noteBuild = new NotificationCompat.Builder(this);
-        noteBuild.setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle("New Friend Request!")
-                .setContentText(requester.getUserRealName() + " wants to be your friend!")
-                .setContentIntent(contentIntent);
 
-        NotificationManager noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        noteManager.notify(0, noteBuild.build());
-
-        try {
-            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone r = RingtoneManager.getRingtone(this, notification);
-            r.play();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void setActivity(Activity activity)
