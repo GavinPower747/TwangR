@@ -59,9 +59,6 @@ public class TwangR extends Application {
         }
     }
 
-<<<<<<< HEAD
-    public static Chat chatExists(int chatee)
-=======
     public void notifyMessage(String sender, String message, String chatId)
     {
         Intent notificationIntent = new Intent(this, FriendsListActivity.class);
@@ -85,8 +82,7 @@ public class TwangR extends Application {
     }
 
 
-    public void notifyFriendRequest(User requestee)
->>>>>>> origin/Chat
+    public static Chat chatExists(int chatee)
     {
         for (Chat chat : activeChats) {
             for (int userId : chat.Participants) {

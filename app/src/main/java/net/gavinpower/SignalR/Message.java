@@ -10,30 +10,18 @@ public class Message {
     private String message;
     private boolean isSelf;
     private Date TimeStamp;
-<<<<<<< HEAD
-    private String chatId;
-
-    public Message() {}
-
-    public Message(String messageID, String sender, String message, boolean isSelf, Date TimeStamp, String chatId)
-=======
     private String ChatId;
 
     public Message() {}
 
     public Message(String messageID, String sender, String message, boolean isSelf, Date TimeStamp, String ChatId)
->>>>>>> origin/Chat
     {
         this.messageID = messageID;
         this.sender = sender;
         this.message = message;
         this.isSelf = isSelf;
         this.TimeStamp = TimeStamp;
-<<<<<<< HEAD
-        this.chatId = chatId;
-=======
         this.ChatId = ChatId;
->>>>>>> origin/Chat
     }
 
     public String getMessageID() {
@@ -76,12 +64,6 @@ public class Message {
         TimeStamp = timeStamp;
     }
 
-<<<<<<< HEAD
-    public String getChatId() { return this.chatId; }
-
-    public void setChatId(String chatId) { this.chatId = chatId; }
-
-=======
     public String getChatId() {
         return ChatId;
     }
@@ -89,5 +71,4 @@ public class Message {
     public void setChatId(String chatId) {
         ChatId = chatId;
     }
->>>>>>> origin/Chat
 }

@@ -52,7 +52,12 @@ public class OtherProfileActivity extends ActionBarActivity {
     {
         super.onResume();
         currentActivity = this;
-        HubConnection.getUserById(UserId);
+        HubConnection.getUserById(UserId).done(new Action<User>() {
+            @Override
+            public void run(User user) throws Exception {
+                populateUser(user);
+            }
+        });
         HubConnection.getPostsByUserId(UserId);
     }
 
@@ -68,25 +73,20 @@ public class OtherProfileActivity extends ActionBarActivity {
                 RealName.setText(user.getUserRealName());
                 NickName.setText(user.getUserNickName());
 
-                for(int i = 0; i < friendList.size(); i++)
-                {
-                    if(UserId == friendList.get(i).getUserId())
+                for (int i = 0; i < friendList.size(); i++) {
+                    if (UserId == friendList.get(i).getUserId())
                         friend = true;
                 }
 
-                for(int i = 0; i < friendRequests.size(); i++)
-                {
-                    if(UserId == friendRequests.get(i).getUserId())
+                for (int i = 0; i < friendRequests.size(); i++) {
+                    if (UserId == friendRequests.get(i).getUserId())
                         requestSent = true;
                 }
 
-                if(friend)
-                {
+                if (friend) {
                     Button friend = (Button) findViewById(R.id.OtherProfile_AddFriend);
                     friend.setText("Un-Friend");
-                }
-                else if(requestSent)
-                {
+                } else if (requestSent) {
                     Button friend = (Button) findViewById(R.id.OtherProfile_AddFriend);
                     friend.setText("Request Sent");
                 }
@@ -151,22 +151,6 @@ public class OtherProfileActivity extends ActionBarActivity {
             HubConnection.sendFriendRequest(currentUser.getUserId(), UserId);
     }
 
-    public void startChat(View view)
-    {
-        HubConnection.startChat(UserId);
-    }
-
-    public void moveToChat(String chatId)
-    {
-        Bundle information = new Bundle();
-        Intent intent = new Intent();
-
-        information.putString("ChatId", chatId);
-        intent.setClass(currentActivity, ChatActivity.class);
-        intent.putExtras(information);
-        startActivity(intent);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_friends_list, menu);
@@ -178,10 +162,6 @@ public class OtherProfileActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 }

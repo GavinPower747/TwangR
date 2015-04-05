@@ -1,7 +1,9 @@
 package net.gavinpower.twangr.Activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -13,6 +15,8 @@ import net.gavinpower.twangr.TwangR;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+
+import microsoft.aspnet.signalr.client.Action;
 
 import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentUser;
@@ -34,10 +38,13 @@ public class LoginActivity extends Activity {
     private EditText Username;
     private EditText Password;
 
+    private SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        prefs = getPreferences(MODE_PRIVATE);
 
         Username = (EditText) findViewById(R.id.UserNameEdit);
         Password = (EditText) findViewById(R.id.passwordEdit);
@@ -46,7 +53,7 @@ public class LoginActivity extends Activity {
         currentActivity = this;
         TwangR.initConnection();
 
-        if(currentUser == null) {
+        if(prefs.getInt("UserID", -1) == -1) {
 
             try {
                 if (PASSWORD_BASED_KEY) {
@@ -61,7 +68,14 @@ public class LoginActivity extends Activity {
         }
         else
         {
-            loginSuccess(currentUser);
+            HubConnection.getUserById(prefs.getInt("UserID", -1)).done(new Action<User>()
+            {
+                @Override
+                public void run(User user)
+                {
+                    loginSuccess(user);
+                }
+            });
         }
     }
 
@@ -77,26 +91,18 @@ public class LoginActivity extends Activity {
     {
         String username = Username.getText().toString();
         String password = Password.getText().toString();
-//        try
-//        {
+        try
+        {
             if(!username.equals("GavinAdmin")) { // GavinAdmin is a seeded account to test login before the implementation of registration
                 //password = encrypt(password, key).toString();
             }
 
             HubConnection.login(username, password);
-<<<<<<< HEAD
         }
         catch(Exception ex )
         {
             ex.printStackTrace();
         }
-=======
-//        }
-//        catch(UnsupportedEncodingException | GeneralSecurityException ex )
-//        {
-//            ex.printStackTrace();
-//        }
->>>>>>> origin/Chat
     }
 
     public void register(View registerButton)
@@ -106,20 +112,34 @@ public class LoginActivity extends Activity {
 
     public void loginSuccess(User user)
     {
-        TwangR.setCurrentUser(user);
+        if(prefs.getInt("UserID", -1) == -1)
+        {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("UserID", user.getUserId());
+            editor.commit();
+        }
+
+        currentUser = user;
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
-    public void loginFailure(String status)
+    public void loginFailure(final String status)
     {
-        switch(status)
-        {
-            case "PasswordIncorrect": status = "Your password is incorrect please try again"; break;
-            case "UserNotFound": status = "Incorrect username or password please try again"; break;
-        }
-        Toast toast = Toast.makeText(this, status, Toast.LENGTH_LONG);
-        toast.show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String message = "";
+                switch(status)
+                {
+                    case "PasswordIncorrect": message = "Your password is incorrect please try again"; break;
+                    case "UserNotFound": message = "Incorrect username or password please try again"; break;
+                }
+                Toast toast = Toast.makeText(currentActivity, message, Toast.LENGTH_LONG);
+                toast.show();
+            }
+        });
+
 
     }
 

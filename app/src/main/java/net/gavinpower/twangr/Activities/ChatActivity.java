@@ -44,25 +44,14 @@ public class ChatActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Bundle information = getIntent().getExtras();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        Bundle information = getIntent().getExtras();
 
         TwangR = ((TwangR) getApplicationContext());
         TwangR.setActivity(this);
 
-<<<<<<< HEAD
-        if(TwangR.getCurrentUser() == null)
-        {
-            startActivity(new Intent(this, LoginActivity.class));
-        }
-        else {
-
-            ChatId = this.getIntent().getExtras().getString("ChatId");
-
-            messageBox = (EditText) findViewById(R.id.messageBox);
-            messageContainer = (ListView) findViewById(R.id.list_view_messages);
-=======
         ChatID = information.getString("ChatID");
 
         messageBox = (EditText) findViewById(R.id.messageBox);
@@ -71,7 +60,6 @@ public class ChatActivity extends Activity {
         messageList = new ArrayList<Message>();
         adaptor = new MessageListAdaptor(this, messageList);
         messageContainer.setAdapter(adaptor);
->>>>>>> origin/Chat
 
     }
 
@@ -103,11 +91,8 @@ public class ChatActivity extends Activity {
     public void Send(View view)
     {
         String message = messageBox.getText().toString();
-<<<<<<< HEAD
-        Message msg = new Message(currentUser.getUserRealName() + HubConnection.getMessageCount(), currentUser.getUserRealName(), message, true, new Date(), this.ChatId);
-=======
         Message msg = new Message(currentUser.getUserRealName() + HubConnection.getMessageCount(), currentUser.getUserRealName(), message, true, new Date(), ChatID);
->>>>>>> origin/Chat
+
         addMessageToContainer(msg);
         HubConnection.Send(msg).done(new Action<Message>()
         {
