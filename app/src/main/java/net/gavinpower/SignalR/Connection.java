@@ -20,7 +20,6 @@ import net.gavinpower.twangr.TwangR;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import microsoft.aspnet.signalr.client.ErrorCallback;
 import microsoft.aspnet.signalr.client.LogLevel;
@@ -74,8 +73,7 @@ public class Connection
                 InitListeners();
                 TestConnection();
             }
-        }).onError(new ErrorCallback()
-        {
+        }).onError(new ErrorCallback() {
             public void onError(Throwable error)
             {
                 connection.start().done(new Action<Void>() {
@@ -97,10 +95,20 @@ public class Connection
                         InitListeners();
                         TestConnection();
                     }
+                }).onError(new ErrorCallback() {
+                    @Override
+                    public void onError(Throwable error)
+                    {
+                        currentActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(currentActivity, "Unable to establish connection! Please check your internet connection.", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
                 });
             }
         });
-
     }
 
     public void TestConnection()
@@ -123,7 +131,7 @@ public class Connection
         return distributionHub.invoke(Message.class, "Send", MessageID, messageUp ,sender, isSelf, ChatId);
     }
 
-    public SignalRFuture startChat(int chatee)
+    public SignalRFuture<String> startChat(int chatee)
     {
         return distributionHub.invoke(String.class, "AddChat", currentUser.getUserId(), chatee);
     }

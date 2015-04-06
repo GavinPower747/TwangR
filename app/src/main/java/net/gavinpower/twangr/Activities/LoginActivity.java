@@ -1,7 +1,6 @@
 package net.gavinpower.twangr.Activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,9 +12,6 @@ import net.gavinpower.Models.User;
 import net.gavinpower.twangr.R;
 import net.gavinpower.twangr.TwangR;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-
 import microsoft.aspnet.signalr.client.Action;
 
 import static net.gavinpower.twangr.TwangR.HubConnection;
@@ -23,7 +19,6 @@ import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.twangr.TwangR.currentActivity;
 import static net.gavinpower.Security.AESEncrypt.generateKeyFromPassword;
 import static net.gavinpower.Security.AESEncrypt.generateSalt;
-import static net.gavinpower.Security.AESEncrypt.encrypt;
 import static net.gavinpower.Security.AESEncrypt.generateKey;
 import static net.gavinpower.Security.AESEncrypt.saltString;
 import static net.gavinpower.Security.AESEncrypt.PASSWORD;

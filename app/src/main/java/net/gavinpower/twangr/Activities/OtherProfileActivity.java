@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.gavinpower.Models.Chat;
 import net.gavinpower.Models.Statuses;
@@ -113,24 +114,37 @@ public class OtherProfileActivity extends ActionBarActivity {
         final Chat chat = chatExists(user.getUserId());
         final int chatee = user.getUserId();
         if (chat.chatId.equals("NotFound"))
-            HubConnection.startChat(user.getUserId()).done(new Action<String>() {
+            HubConnection.startChat(user.getUserId()).done(new Action<String>()
+            {
                 public void run(String chatId)
                 {
-                    Intent intent = new Intent(currentActivity, ChatActivity.class);
-                    Bundle info = new Bundle();
+                    if(chatId.substring(0, 4).equals("Chat")) {
+                        Intent intent = new Intent(currentActivity, ChatActivity.class);
+                        Bundle info = new Bundle();
 
-                    info.putString("ChatId", chatId);
+                        info.putString("ChatId", chatId);
 
-                    intent.putExtras(info);
-                    startActivity(intent);
-                    Chat newchat = new Chat();
+                        intent.putExtras(info);
+                        startActivity(intent);
+                        Chat newchat = new Chat();
 
-                    newchat.chatId = chatId;
-                    newchat.Participants = new ArrayList<Integer>();
-                    newchat.Participants.add(currentUser.getUserId());
-                    newchat.Participants.add(chatee);
+                        newchat.chatId = chatId;
+                        newchat.Participants = new ArrayList<Integer>();
+                        newchat.Participants.add(currentUser.getUserId());
+                        newchat.Participants.add(chatee);
 
-                    activeChats.add(newchat);
+                        activeChats.add(newchat);
+                    }
+                    else
+                    {
+                        currentActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run()
+                            {
+                                Toast.makeText(currentActivity, "Could not start chat, please check your connection!", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
                 }
             });
         else
