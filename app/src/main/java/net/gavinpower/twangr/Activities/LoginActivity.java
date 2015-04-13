@@ -46,7 +46,6 @@ public class LoginActivity extends Activity {
 
         TwangR = (TwangR) getApplication();
         currentActivity = this;
-        TwangR.initConnection();
 
         if(prefs.getInt("UserID", -1) == -1) {
 

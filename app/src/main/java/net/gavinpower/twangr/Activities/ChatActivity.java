@@ -75,25 +75,30 @@ public class ChatActivity extends Activity {
     }
 
 
-    public void addMessageToContainer(final Message message)
+    public void addMessageToContainer(final Message message, String ChatId)
     {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run()
-            {
-                messageList.add(message);
-                adaptor.notifyDataSetChanged();
-            }
+        if(ChatId.equals(this.ChatID)) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    messageList.add(message);
+                    adaptor.notifyDataSetChanged();
+                }
 
-        });
+            });
+        }
+        else
+        {
+            //Notify and store message in localDB
+        }
     }
 
     public void Send(View view)
     {
         String message = messageBox.getText().toString();
-        Message msg = new Message(currentUser.getUserRealName() + HubConnection.getMessageCount(), currentUser.getUserRealName(), message, true, new Date(), ChatID);
+        Message msg = new Message(currentUser.getUserRealName() + HubConnection.getMessageCount(), currentUser.getUserRealName(), message, true, new Date().toString(), ChatID);
 
-        addMessageToContainer(msg);
+        addMessageToContainer(msg, this.ChatID);
         HubConnection.Send(msg).done(new Action<Message>()
         {
             public void run(Message message)

@@ -7,10 +7,10 @@ public class Chat {
     public Chat() {}
     public Chat(String chatId, List<Integer> Participants)
     {
-        this.chatId = chatId;
+        this.ChatId = chatId;
         this.Participants = Participants;
     }
 
-    public String chatId;
+    public String ChatId;
     public List<Integer> Participants;
 }

@@ -7,6 +7,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import static net.gavinpower.twangr.TwangR.currentUser;
+import static net.gavinpower.twangr.TwangR.repo;
+
 public class Statuses implements Collection<Status> {
     public List<Status> _Statuses;
 
@@ -18,6 +21,21 @@ public class Statuses implements Collection<Status> {
     public Status get(int position)
     {
         return _Statuses.get(position);
+    }
+
+    public void getNewsFeed()
+    {
+        _Statuses = repo.getNewsFeed();
+    }
+
+    public void getMyPosts()
+    {
+        _Statuses = repo.getPostsByUserId(currentUser.UserId);
+    }
+
+    public void getPostsByUserId(int UserId)
+    {
+        _Statuses = repo.getPostsByUserId(UserId);
     }
 
     @Override

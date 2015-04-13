@@ -28,6 +28,7 @@ import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.friendList;
 import static net.gavinpower.twangr.TwangR.friendRequests;
+import static net.gavinpower.twangr.TwangR.repo;
 
 public class OtherProfileActivity extends ActionBarActivity {
 
@@ -53,18 +54,8 @@ public class OtherProfileActivity extends ActionBarActivity {
     {
         super.onResume();
         currentActivity = this;
-        HubConnection.getUserById(UserId).done(new Action<User>() {
-            @Override
-            public void run(User user) throws Exception {
-                populateUser(user);
-            }
-        });
-        HubConnection.getPostsByUserId(UserId);
-    }
+        this.user = repo.getUserById(UserId);
 
-    public void populateUser(final User user)
-    {
-        this.user = user;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -94,26 +85,15 @@ public class OtherProfileActivity extends ActionBarActivity {
             }
         });
 
-    }
-
-    public void populateNewsFeed(final Statuses statuses)
-    {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                newsFeed = statuses;
-                adaptor = new StatusListAdaptor(currentActivity, newsFeed);
-                status.setAdapter(adaptor);
-            }
-        });
-
+        newsFeed.getPostsByUserId(UserId);
+        adaptor.notifyDataSetChanged();
     }
 
     @SuppressWarnings("unchecked")
     public void startChat(View view) {
         final Chat chat = chatExists(user.getUserId());
         final int chatee = user.getUserId();
-        if (chat.chatId.equals("NotFound"))
+        if (chat.ChatId.equals("NotFound"))
             HubConnection.startChat(user.getUserId()).done(new Action<String>()
             {
                 public void run(String chatId)
@@ -128,7 +108,7 @@ public class OtherProfileActivity extends ActionBarActivity {
                         startActivity(intent);
                         Chat newchat = new Chat();
 
-                        newchat.chatId = chatId;
+                        newchat.ChatId = chatId;
                         newchat.Participants = new ArrayList<Integer>();
                         newchat.Participants.add(currentUser.getUserId());
                         newchat.Participants.add(chatee);
@@ -152,7 +132,7 @@ public class OtherProfileActivity extends ActionBarActivity {
             Intent intent = new Intent(currentActivity, ChatActivity.class);
             Bundle content = new Bundle();
 
-            content.putString("ChatID", chat.chatId);
+            content.putString("ChatID", chat.ChatId);
 
             intent.putExtras(content);
             startActivity(intent);

@@ -50,7 +50,7 @@ public class MessageListAdaptor extends BaseAdapter {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
-        if(m.isSelf())
+        if(m.isSelf(m.getSender()))
             convertView = inflater.inflate(R.layout.chat_messageself_frag, null);
         else
             convertView = inflater.inflate(R.layout.chat_message_frag, null);

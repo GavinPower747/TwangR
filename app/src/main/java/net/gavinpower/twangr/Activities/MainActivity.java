@@ -30,14 +30,14 @@ import net.gavinpower.twangr.TwangR;
 import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentActivity;
 import static net.gavinpower.twangr.TwangR.currentUser;
+import static net.gavinpower.twangr.TwangR.myPosts;
+import static net.gavinpower.twangr.TwangR.newsFeed;
 
 
 public class MainActivity extends ActionBarActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private TwangR twangR;
-    private Statuses myPosts;
-    private Statuses newsFeed;
     private Users Suggestions;
     private SimpleCursorAdapter searchAdaptor;
 
@@ -48,8 +48,6 @@ public class MainActivity extends ActionBarActivity {
         twangR = (TwangR)getApplication();
         twangR.setActivity(this);
 
-        myPosts = new Statuses();
-        newsFeed = new Statuses();
         if(currentUser == null)
         {
             startActivity(new Intent(this, LoginActivity.class));
@@ -71,8 +69,8 @@ public class MainActivity extends ActionBarActivity {
     {
         super.onResume();
         currentActivity = this;
-        HubConnection.getMyPosts(currentUser.getUserId());
-        HubConnection.getNewsFeed(currentUser.getUserId());
+        myPosts.getMyPosts();
+        newsFeed.getNewsFeed();
         HubConnection.getFriendsList(currentUser.getUserId());
         HubConnection.getFriendRequests(currentUser.getUserId());
         HubConnection.getChats();
@@ -90,13 +88,13 @@ public class MainActivity extends ActionBarActivity {
 
     public void populateNewsFeed(Statuses statuses)
     {
-        this.newsFeed = statuses;
+        newsFeed = statuses;
         ((NewsFeedFrag)mSectionsPagerAdapter.getItem(1)).populateNewsFeed(statuses);
     }
 
     public void populateProfile(Statuses statuses)
     {
-        this.myPosts = statuses;
+        myPosts = statuses;
         ((ProfileFrag)mSectionsPagerAdapter.getItem(0)).populateMyPosts(statuses);
     }
 

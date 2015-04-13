@@ -26,55 +26,31 @@ public class User
         return UserId;
     }
 
-    public void setUserId(int userId) {
-        UserId = userId;
-    }
-
     public String getUserName() {
         return UserName;
-    }
-
-    public void setUserName(String userName) {
-        UserName = userName;
-    }
-
-    public String getUserPassword() {
-        return UserPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        UserPassword = userPassword;
     }
 
     public String getUserRealName() {
         return UserRealName;
     }
 
-    public void setUserRealName(String userRealName) {
-        UserRealName = userRealName;
-    }
-
-    public String getUserEmail() {
-        return UserEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        UserEmail = userEmail;
-    }
-
     public String getUserNickName() {
         return UserNickName;
     }
 
-    public void setUserNickName(String userNickName) {
-        UserNickName = userNickName;
+    public String toDBFields()
+    {
+        return "UserId, UserName, UserPassword, UserRealName, UserEmail, UserNickName, UserStatus";
     }
 
-    public String getUserStatus() {
-        return UserStatus;
-    }
-
-    public void setUserStatus(String userStatus) {
-        UserStatus = userStatus;
+    public String toDBString()
+    {
+        return " " + this.UserId + ","
+                + this.UserName + ","
+                + this.UserPassword + ","
+                + this.UserRealName + ","
+                + this.UserEmail + ","
+                + this.UserNickName + ","
+                + this.UserStatus;
     }
 }

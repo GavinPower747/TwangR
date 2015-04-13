@@ -18,7 +18,6 @@ import net.gavinpower.twangr.Activities.RegisterActivity;
 import net.gavinpower.twangr.TwangR;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 import microsoft.aspnet.signalr.client.ErrorCallback;
@@ -29,6 +28,7 @@ import microsoft.aspnet.signalr.client.hubs.HubConnection;
 import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
 import microsoft.aspnet.signalr.client.Logger;
+import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler2;
 
 import static net.gavinpower.twangr.TwangR.currentActivity;
 import static net.gavinpower.twangr.TwangR.currentUser;
@@ -36,6 +36,7 @@ import static net.gavinpower.twangr.TwangR.friendList;
 import static net.gavinpower.twangr.TwangR.friendRequests;
 import static net.gavinpower.twangr.TwangR.onlineFriends;
 import static net.gavinpower.twangr.TwangR.activeChats;
+import static net.gavinpower.twangr.TwangR.chatExists;
 
 public class Connection
 {
@@ -71,7 +72,6 @@ public class Connection
             @Override
             public void run(Void aVoid) throws Exception {
                 InitListeners();
-                TestConnection();
             }
         }).onError(new ErrorCallback() {
             public void onError(Throwable error)
@@ -80,7 +80,6 @@ public class Connection
                     @Override
                     public void run(Void aVoid) throws Exception {
                         InitListeners();
-                        TestConnection();
                     }
                 });
             }
@@ -93,7 +92,6 @@ public class Connection
                     @Override
                     public void run(Void aVoid) throws Exception {
                         InitListeners();
-                        TestConnection();
                     }
                 }).onError(new ErrorCallback() {
                     @Override
@@ -107,13 +105,9 @@ public class Connection
                         });
                     }
                 });
+                distributionHub.invoke("JoinRealTime", currentUser);
             }
         });
-    }
-
-    public void TestConnection()
-    {
-        distributionHub.invoke("TestConnection");
     }
 
     public SignalRFuture<Message> Send(Message message)
@@ -124,11 +118,11 @@ public class Connection
         String MessageID = message.getMessageID();
         String messageUp = message.getMessage();
         String sender = message.getSender();
-        boolean isSelf = message.isSelf();
-        Date TimeStamp = message.getTimeStamp();
+        boolean isSelf = message.isSelf(sender);
+        String TimeStamp = message.getTimeStamp();
         String ChatId = message.getChatId();
 
-        return distributionHub.invoke(Message.class, "Send", MessageID, messageUp ,sender, isSelf, ChatId);
+        return distributionHub.invoke(Message.class, "Send", MessageID, messageUp ,sender, TimeStamp, isSelf, ChatId);
     }
 
     public SignalRFuture<String> startChat(int chatee)
@@ -167,42 +161,14 @@ public class Connection
         });
     }
 
-    public void getNewsFeed(int UserId)
+    public SignalRFuture<Statuses> getNewsFeed(int UserId)
     {
-        distributionHub.invoke(Statuses.class,"GetNewsFeed", UserId).done(new Action<Statuses>() {
-            @Override
-            public void run(Statuses statuses) throws Exception {
-                ((MainActivity)currentActivity).populateNewsFeed(statuses);
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
-                currentActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run()
-                    {
-                        Toast toast = Toast.makeText(currentActivity, "There was an error in getting your news feed", Toast.LENGTH_LONG);
-                        toast.show();
-                    }
-                });
-            }
-        });
+        return distributionHub.invoke(Statuses.class, "GetNewsFeed", UserId);
     }
 
-    public void getMyPosts(int UserId)
+    public SignalRFuture<Statuses> getMyPosts(int UserId)
     {
-        distributionHub.invoke(Statuses.class, "GetPostsByUser", UserId).done(new Action<Statuses>() {
-            @Override
-            public void run(Statuses statuses) {
-                ((MainActivity)currentActivity).populateProfile(statuses);
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
-            }
-        });
+        return distributionHub.invoke(Statuses.class, "GetPostsByUser", UserId);
     }
 
     public void insertPost(String postContent, int userId)
@@ -223,17 +189,6 @@ public class Connection
     public SignalRFuture<User> getUserById(int userId)
     {
         return distributionHub.invoke(User.class, "GetUserByID", userId);
-    }
-
-    public void getPostsByUserId(int userId)
-    {
-        distributionHub.invoke(Statuses.class, "GetPostsByUser", userId).done(new Action<Statuses>() {
-            @Override
-            public void run(Statuses statuses)
-            {
-                ((OtherProfileActivity) currentActivity).populateNewsFeed(statuses);
-            }
-        });
     }
 
     public void getFriendsList(int UserId)
@@ -325,7 +280,7 @@ public class Connection
                         new SubscriptionHandler() {
                             @Override
                             public void run() {
-                                Log.w("CallBack from Hub to Client", "Successful Connection");
+                                Log.w("CallBack from Hub", "Successful Connection");
                             }
                         });
 
@@ -338,27 +293,15 @@ public class Connection
 
                 });
 
-                distributionHub.subscribe(new Object() {
-                    @SuppressWarnings("unused")
-                    public void addMessage(String MessageID, String messageUp, String sender, boolean isSelf, String ChatId) {
-                        Message message = new Message(MessageID, sender, messageUp, isSelf, new Date(), ChatId);
-                        Log.v("Message Recieved", "Name = " + message.getSender() + ", message = " + message.getMessage());
-                        if(currentActivity instanceof ChatActivity && !message.isSelf())
-                            ((ChatActivity) currentActivity).addMessageToContainer(message);
-                    }
-                });
-
-                distributionHub.subscribe(new Object() {
-                    @SuppressWarnings("unused")
-                    public void messageRecieved(String MessageID, String messageUp, String sender, boolean isSelf, String ChatId)
+                distributionHub.on("addMessage", new SubscriptionHandler2<Message, String>()
+                {
+                    @Override
+                    public void run(Message message, String ChatId)
                     {
-                        Message message =  new Message(MessageID, sender, messageUp, isSelf, new Date(), ChatId);
-                        if(unsentMessages.containsKey(message.getMessageID()))
-                        {
-                            unsentMessages.remove(message.getMessageID());
-                        }
+                        if(currentActivity instanceof ChatActivity && chatExists(ChatId) && !message.isSelf(message.getSender()))
+                            ((ChatActivity) currentActivity).addMessageToContainer(message, ChatId);
                     }
-                });
+                }, Message.class, String.class);
 
                 distributionHub.subscribe(new Object() {
                     @SuppressWarnings("unused")
