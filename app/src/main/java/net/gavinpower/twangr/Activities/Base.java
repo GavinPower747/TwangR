@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import net.gavinpower.Database.DBManager;
 import net.gavinpower.SignalR.Connection;
 import net.gavinpower.Tasks.SignalRConnection;
 import net.gavinpower.twangr.TwangR;
@@ -16,6 +17,8 @@ import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentActivity;
 
 import java.util.concurrent.ExecutionException;
+
+import static net.gavinpower.twangr.TwangR.repo;
 
 public class Base extends Activity
 {
@@ -28,6 +31,7 @@ public class Base extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        currentActivity = this;
         ConnectivityManager mgr = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 
         Wifi = mgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -39,9 +43,8 @@ public class Base extends Activity
         } catch (InterruptedException | ExecutionException ex) {
             Toast.makeText(this, "Unable to connect to web service!", Toast.LENGTH_LONG).show();
         }
-        TwangR twangR = (TwangR)getApplication();
-
-        twangR.repo.open();
+        repo = new DBManager(currentActivity);
+        repo.open();
     }
 
     @Override

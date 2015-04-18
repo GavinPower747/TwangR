@@ -1,21 +1,23 @@
 package net.gavinpower.SignalR;
 
+import android.content.Intent;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import net.gavinpower.Models.Chat;
 import net.gavinpower.Models.Chats;
+import net.gavinpower.Models.Message;
+import net.gavinpower.Models.Messages;
 import net.gavinpower.Models.Statuses;
 import net.gavinpower.Models.User;
 import net.gavinpower.Models.Users;
 import net.gavinpower.twangr.Activities.ChatActivity;
 import net.gavinpower.twangr.Activities.LoginActivity;
 import net.gavinpower.twangr.Activities.MainActivity;
-import net.gavinpower.twangr.Activities.OtherProfileActivity;
 import net.gavinpower.twangr.Activities.RegisterActivity;
-import net.gavinpower.twangr.TwangR;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,22 +36,17 @@ import static net.gavinpower.twangr.TwangR.currentActivity;
 import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.twangr.TwangR.friendList;
 import static net.gavinpower.twangr.TwangR.friendRequests;
+import static net.gavinpower.twangr.TwangR.messageList;
 import static net.gavinpower.twangr.TwangR.onlineFriends;
 import static net.gavinpower.twangr.TwangR.activeChats;
 import static net.gavinpower.twangr.TwangR.chatExists;
+import static net.gavinpower.twangr.TwangR.repo;
 
 public class Connection
 {
     public HubConnection connection;
     public HubProxy distributionHub;
-
-    public ArrayList<Message> messageList = new ArrayList<>();
     public HashMap<String, Message> unsentMessages = new HashMap<>();
-
-    private TwangR TwangR;
-
-    private NetworkInfo Wifi;
-    private NetworkInfo MobileData;
 
     public Connection(String hubURL, NetworkInfo Wifi, NetworkInfo MobileData)
     {
@@ -61,12 +58,8 @@ public class Connection
         };
 
         this.connection = new HubConnection(hubURL, "", true, logger);
-        this.Wifi = Wifi;
-        this.MobileData = MobileData;
 
         distributionHub = this.connection.createHubProxy("DistributionHub");
-
-        TwangR = (TwangR) currentActivity.getApplication();
 
         this.connection.start().done(new Action<Void>() {
             @Override
@@ -122,6 +115,9 @@ public class Connection
         String TimeStamp = message.getTimeStamp();
         String ChatId = message.getChatId();
 
+        repo.insertMessage(message);
+        messageList.add(message);
+
         return distributionHub.invoke(Message.class, "Send", MessageID, messageUp ,sender, TimeStamp, isSelf, ChatId);
     }
 
@@ -129,7 +125,7 @@ public class Connection
     {
         return distributionHub.invoke(String.class, "AddChat", currentUser.getUserId(), chatee);
     }
-
+    @SuppressWarnings("unchecked")
     public void getChats()
     {
         distributionHub.invoke(Chats.class, "GetChats", currentUser.getUserId()).done(new Action<Chats>()
@@ -137,6 +133,24 @@ public class Connection
             public void run(Chats chats)
             {
                 activeChats = chats;
+                    new AsyncTask() {
+                        @Override
+                        protected Object doInBackground(Object[] params) {
+                            for(Chat chat : activeChats)
+                            {
+                                try {
+                                    Messages messages = getMessagesByChatId(chat.ChatId).get();
+                                    for (Message message : messages)
+                                        messageList.add(message);
+                                }
+                                catch(Exception ex)
+                                {
+                                    ex.printStackTrace();
+                                }
+                            }
+                            return null;
+                        }
+                    }.execute();
             }
         });
     }
@@ -171,19 +185,14 @@ public class Connection
         return distributionHub.invoke(Statuses.class, "GetPostsByUser", UserId);
     }
 
-    public void insertPost(String postContent, int userId)
+    public SignalRFuture<Integer> insertPost(String postContent, int userId)
     {
-        distributionHub.invoke(String.class,"InsertStatus", postContent, userId).done(new Action<String>() {
-            @Override
-            public void run(String status)
-            {
-                Log.v("Insert Post", status);
-                if(!status.equals("Passed"))
-                    Toast.makeText(currentActivity, "Unable to add status", Toast.LENGTH_LONG).show();
-                else
-                    currentActivity.finish();
-            }
-        });
+        return distributionHub.invoke(Integer.class,"InsertStatus", postContent, userId);
+    }
+
+    public SignalRFuture<Messages> getMessagesByChatId(String ChatId)
+    {
+        return distributionHub.invoke(Messages.class, "GetMessagesByChatId", ChatId);
     }
 
     public SignalRFuture<User> getUserById(int userId)
@@ -298,8 +307,27 @@ public class Connection
                     @Override
                     public void run(Message message, String ChatId)
                     {
-                        if(currentActivity instanceof ChatActivity && chatExists(ChatId) && !message.isSelf(message.getSender()))
+                        if(currentActivity instanceof ChatActivity && chatExists(ChatId) && !message.isSelf(message.getSender())) {
                             ((ChatActivity) currentActivity).addMessageToContainer(message, ChatId);
+                            repo.insertMessage(message);
+                            messageList.add(message);
+                        }
+                        else if(chatExists(ChatId))
+                        {
+                            Intent broadcastIntent = new Intent("TwangR_MessageRecieved");
+                            Bundle content = new Bundle();
+
+                            content.putString("ChatID", ChatId);
+                            content.putString("UserName", message.sender);
+                            content.putString("MessageContent", message.message);
+
+                            broadcastIntent.putExtras(content);
+
+                            currentActivity.sendBroadcast(broadcastIntent);
+
+                            repo.insertMessage(message);
+                            messageList.add(message);
+                        }
                     }
                 }, Message.class, String.class);
 
@@ -359,7 +387,13 @@ public class Connection
                             @Override
                             public void run(User user)
                             {
-                                TwangR.notifyFriendRequest(user);
+                                Intent broadcastIntent = new Intent();
+                                Bundle content = new Bundle();
+                                broadcastIntent.setAction("TwangR_FriendRequest");
+                                content.putString("UserName", user.UserName);
+                                broadcastIntent.putExtras(content);
+
+                                currentActivity.sendBroadcast(broadcastIntent);
                             }
                         });
                     }
@@ -373,7 +407,13 @@ public class Connection
                             @Override
                             public void run(User user)
                             {
-                                TwangR.notifyFriendAccept(user);
+                                Intent broadcastIntent = new Intent();
+                                Bundle content = new Bundle();
+                                broadcastIntent.setAction("TwangR_FriendAccept");
+                                content.putString("UserName", user.UserName);
+                                broadcastIntent.putExtras(content);
+
+                                currentActivity.sendBroadcast(broadcastIntent);
                             }
                         });
                     }
@@ -399,6 +439,6 @@ public class Connection
 
     public int getMessageCount()
     {
-        return this.messageList.size();
+        return messageList.size();
     }
 }

@@ -1,6 +1,7 @@
 package net.gavinpower.twangr.Activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.widget.Toast;
 
 import net.gavinpower.Models.User;
 import net.gavinpower.twangr.R;
-import net.gavinpower.twangr.TwangR;
 
 import microsoft.aspnet.signalr.client.Action;
 
@@ -28,10 +28,9 @@ import static net.gavinpower.Security.AESEncrypt.key;
 
 public class LoginActivity extends Activity {
 
-    private net.gavinpower.twangr.TwangR TwangR;
-
     private EditText Username;
     private EditText Password;
+    private ProgressDialog progressDialog;
 
     private SharedPreferences prefs;
 
@@ -44,8 +43,9 @@ public class LoginActivity extends Activity {
         Username = (EditText) findViewById(R.id.UserNameEdit);
         Password = (EditText) findViewById(R.id.passwordEdit);
 
-        TwangR = (TwangR) getApplication();
         currentActivity = this;
+
+        progressDialog = new ProgressDialog(currentActivity);
 
         if(prefs.getInt("UserID", -1) == -1) {
 
@@ -91,6 +91,8 @@ public class LoginActivity extends Activity {
                 //password = encrypt(password, key).toString();
             }
 
+            progressDialog.setMessage("Logging in...");
+            progressDialog.show();
             HubConnection.login(username, password);
         }
         catch(Exception ex )
@@ -110,24 +112,32 @@ public class LoginActivity extends Activity {
         {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt("UserID", user.getUserId());
-            editor.commit();
+            editor.apply();
         }
 
         currentUser = user;
+        progressDialog.dismiss();
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
     public void loginFailure(final String status)
     {
+        progressDialog.dismiss();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 String message = "";
-                switch(status)
-                {
-                    case "PasswordIncorrect": message = "Your password is incorrect please try again"; break;
-                    case "UserNotFound": message = "Incorrect username or password please try again"; break;
+                switch (status) {
+                    case "PasswordIncorrect":
+                        message = "Your password is incorrect please try again";
+                        break;
+                    case "UserNotFound":
+                        message = "Incorrect username or password please try again";
+                        break;
+                    default:
+                        message = status;
+                        break;
                 }
                 Toast toast = Toast.makeText(currentActivity, message, Toast.LENGTH_LONG);
                 toast.show();

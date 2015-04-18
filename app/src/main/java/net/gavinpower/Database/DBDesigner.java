@@ -17,8 +17,8 @@ public class DBDesigner extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "TwangR.db";
 	private static final int 	DATABASE_VERSION = 1;
 	private static String DATABASE_CREATE_TABLE;
-    private static final String[] chatColumns = new String[] {"MessageID integer primary key,", "Sender text,", "Message text,", "TimeStamp text,", "ChatID text"};
-    private static final String[] statusesCols = new String[] {"StatusId integer primary key,", "StatusContent text,", "StatusAuthorId integer,", "StatusAuthor text,", "LogDate text"};
+    private static final String[] chatColumns = new String[] {"MessageID text primary key,", "Sender text,", "Message text,", "TimeStamp text,", "ChatID text"};
+    private static final String[] statusesCols = new String[] {"StatusId integer primary key,", "StatusContent text,", "StatusAuthorId integer,", "StatusAuthor text,", "StatusLikes integer default 0,","LogDate text"};
     private static final String[] userCols = new String[] {"UserId integer primary key,", "UserName text unique,", "UserPassword text,", "UserRealName text,", "UserEmail text unique,", "UserNickName text,", "UserStatus text"};
 		
 	public DBDesigner(Context context) {

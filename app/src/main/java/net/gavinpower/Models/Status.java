@@ -22,17 +22,22 @@ public class Status {
 
     public String toDBFields()
     {
-        return "StatusId, StatusContent, StatusAuthorId, StatusAuthor, StatusLikes, LogDate";
+        return "StatusId, " +
+                "StatusContent, " +
+                "StatusAuthorId," +
+                " StatusAuthor," +
+                //" StatusLikes, " +
+                "LogDate";
     }
 
     public String toDBString()
     {
-        return " " + this.StatusId + ","
-                + this.StatusContent + ","
-                + this.StatusAuthorID + ","
-                + this.StatusAuthor + ","
-                + this.StatusLikes + ","
-                + this.LogDate;
+        return " " + this.StatusId + ",'"
+                + this.StatusContent + "',"
+                + this.StatusAuthorID + ",'"
+                + this.StatusAuthor + "','"
+                //+ this.StatusLikes + ",'"
+                + this.LogDate + "'";
     }
 
     public String getStatusContent() {

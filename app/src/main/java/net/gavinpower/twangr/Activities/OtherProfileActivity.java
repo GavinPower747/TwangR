@@ -47,6 +47,9 @@ public class OtherProfileActivity extends ActionBarActivity {
         setContentView(R.layout.activity_other_profile);
         UserId = bundle.getInt("UserId");
         status = (ListView) findViewById(R.id.OtherProfile_News);
+        newsFeed = new Statuses();
+        adaptor = new StatusListAdaptor(this, newsFeed);
+        status.setAdapter(adaptor);
     }
 
     @Override
@@ -102,7 +105,7 @@ public class OtherProfileActivity extends ActionBarActivity {
                         Intent intent = new Intent(currentActivity, ChatActivity.class);
                         Bundle info = new Bundle();
 
-                        info.putString("ChatId", chatId);
+                        info.putString("ChatID", chatId);
 
                         intent.putExtras(info);
                         startActivity(intent);

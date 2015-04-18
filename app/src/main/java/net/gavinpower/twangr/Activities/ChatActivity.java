@@ -1,22 +1,16 @@
 package net.gavinpower.twangr.Activities;
 
-import java.util.ArrayList;
+
 import java.util.Date;
-import java.util.List;
 
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.content.Intent;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import net.gavinpower.SignalR.Message;
+import net.gavinpower.Models.Message;
+import net.gavinpower.Models.Messages;
 import net.gavinpower.Utilities.MessageListAdaptor;
 import net.gavinpower.twangr.R;
 import net.gavinpower.twangr.TwangR;
@@ -25,18 +19,16 @@ import microsoft.aspnet.signalr.client.Action;
 
 import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentUser;
+import static net.gavinpower.twangr.TwangR.repo;
 
 public class ChatActivity extends Activity {
 
     net.gavinpower.twangr.TwangR TwangR;
 
-    private String ChatId;
-    private int UserId;
-
     private EditText messageBox;
 
     private MessageListAdaptor adaptor;
-    private List<Message> messageList;
+    private Messages currentMessages;
     private ListView messageContainer;
 
     private String ChatID;
@@ -57,9 +49,12 @@ public class ChatActivity extends Activity {
         messageBox = (EditText) findViewById(R.id.messageBox);
         messageContainer = (ListView) findViewById(R.id.list_view_messages);
 
-        messageList = new ArrayList<Message>();
-        adaptor = new MessageListAdaptor(this, messageList);
+        currentMessages =  new Messages();
+        adaptor = new MessageListAdaptor(this, currentMessages);
         messageContainer.setAdapter(adaptor);
+
+        currentMessages.getMessagesByChatId(ChatID);
+        adaptor.notifyDataSetChanged();
 
     }
 
@@ -68,10 +63,8 @@ public class ChatActivity extends Activity {
     {
         super.onResume();
         TwangR.setActivity(this);
-        if(TwangR.getCurrentUser() == null)
-        {
-            startActivity(new Intent(this, LoginActivity.class));
-        }
+
+        currentMessages.getMessagesByChatId(ChatID);
     }
 
 
@@ -81,7 +74,7 @@ public class ChatActivity extends Activity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    messageList.add(message);
+                    currentMessages.add(message);
                     adaptor.notifyDataSetChanged();
                 }
 
@@ -89,7 +82,7 @@ public class ChatActivity extends Activity {
         }
         else
         {
-            //Notify and store message in localDB
+            //Notify
         }
     }
 

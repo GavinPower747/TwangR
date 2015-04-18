@@ -10,7 +10,7 @@ import android.widget.Toast;
 import net.gavinpower.Exceptions.LocalCacheException;
 import net.gavinpower.Models.Status;
 import net.gavinpower.Models.User;
-import net.gavinpower.SignalR.Message;
+import net.gavinpower.Models.Message;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,47 @@ public class DBManager {
         {
             database.beginTransaction();
 
-            database.execSQL("insert into " + Table.Users.toString() + "(" + user.toDBFields() + ")" + "values (" + user.toDBString() + ")");
+            database.execSQL("insert into " + Table.Users.toString() + "(" + user.toDBFields() + ")" + " values (" + user.toDBString() + ")");
+
+            database.setTransactionSuccessful();
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        finally
+        {
+            database.endTransaction();
+        }
+    }
+
+    public void insertMessage(Message message)
+    {
+        try
+        {
+            database.beginTransaction();
+
+            database.execSQL("insert into " + Table.Messages.toString() + "(" + message.toDBFields() + ")" + " values (" + message.toDBString() + ")");
+
+            database.setTransactionSuccessful();
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        finally
+        {
+            database.endTransaction();
+        }
+    }
+
+    public void insertStatus(Status status)
+    {
+        try
+        {
+            database.beginTransaction();
+
+            database.execSQL("insert into " + Table.Statuses.toString() + "(" + status.toDBFields() + ")" + " values (" + status.toDBString() + ")");
 
             database.setTransactionSuccessful();
         }
@@ -132,7 +172,10 @@ public class DBManager {
         {
             try
             {
-                return HubConnection.getNewsFeed(currentUser.UserId).get()._Statuses;
+                statuses = HubConnection.getNewsFeed(currentUser.UserId).get()._Statuses;
+
+                for(Status status : statuses)
+                    insertStatus(status);
             }
             catch(InterruptedException | ExecutionException exc)
             {
@@ -164,8 +207,14 @@ public class DBManager {
         {
             database.beginTransaction();
 
-            Cursor cursor = database.rawQuery("select * from " + Table.Statuses + " where UserId =" + UserId, null);
+            Cursor cursor = database.rawQuery("select * from " + Table.Statuses + " where StatusAuthorId =" + UserId, null);
             cursor.moveToFirst();
+
+            while(!cursor.isAfterLast())
+            {
+                posts.add(toStatus(cursor));
+                cursor.moveToNext();
+            }
 
             if(cursor.getCount() == 0)
                 throw new LocalCacheException("Local Cache is empty");
@@ -178,6 +227,9 @@ public class DBManager {
             try
             {
                 posts = HubConnection.getMyPosts(UserId).get()._Statuses;
+
+                for(Status post : posts)
+                    insertStatus(post);
             }
             catch(Exception ex)
             {
@@ -197,6 +249,59 @@ public class DBManager {
         }
 
         return posts;
+    }
+
+    public List<Message> getMessagesByChatId(String ChatId)
+    {
+        List<Message> messages = new ArrayList<>();
+
+        try
+        {
+            database.beginTransaction();
+
+            Cursor cursor = database.rawQuery("select * from " + Table.Messages.toString() + " where ChatId = '" + ChatId + "'", null);
+            cursor.moveToFirst();
+
+            if(cursor.getCount() == 0)
+                throw new LocalCacheException("Local cache empty");
+
+            while(!cursor.isAfterLast())
+            {
+                messages.add(toMessage(cursor));
+                cursor.moveToNext();
+            }
+
+            database.setTransactionSuccessful();
+        }
+        catch(LocalCacheException lce)
+        {
+            Log.v("Local Cache", lce.getMessage());
+
+            try
+            {
+                messages = HubConnection.getMessagesByChatId(ChatId).get()._Messages;
+
+                for(Message message : messages)
+                    insertMessage(message);
+            }
+            catch(InterruptedException | ExecutionException ex)
+            {
+                ex.printStackTrace();
+
+                currentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(currentActivity, "There was an error in getting your posts!", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        }
+        finally
+        {
+            database.endTransaction();
+        }
+
+        return messages;
     }
 
     private User toUser(Cursor cursor)

@@ -1,4 +1,4 @@
-package net.gavinpower.SignalR;
+package net.gavinpower.Models;
 
 import static net.gavinpower.twangr.TwangR.currentUser;
 
@@ -31,11 +31,11 @@ public class Message {
 
     public String toDBString()
     {
-        return " " + this.messageID + ","
-                + this.sender + ","
-                + this.message + ","
-                + this.TimeStamp + ","
-                + this.ChatId;
+        return " '" + this.messageID + "','"
+                + this.sender + "','"
+                + this.message + "','"
+                + this.TimeStamp + "','"
+                + this.ChatId + "'";
     }
 
     public String getMessageID() {

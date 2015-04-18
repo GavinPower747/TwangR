@@ -1,6 +1,7 @@
 package net.gavinpower.Utilities;
 
-import net.gavinpower.SignalR.Message;
+import net.gavinpower.Models.Message;
+import net.gavinpower.Models.Messages;
 import net.gavinpower.twangr.R;
 
 import android.annotation.SuppressLint;
@@ -12,13 +13,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.List;
-
 public class MessageListAdaptor extends BaseAdapter {
     private Context context;
-    private List<Message> messageList;
+    private Messages messageList;
 
-    public MessageListAdaptor(Context context, List<Message> messages)
+    public MessageListAdaptor(Context context, Messages messages)
     {
         this.context = context;
         this.messageList = messages;

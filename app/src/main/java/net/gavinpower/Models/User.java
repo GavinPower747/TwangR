@@ -45,12 +45,12 @@ public class User
 
     public String toDBString()
     {
-        return " " + this.UserId + ","
-                + this.UserName + ","
-                + this.UserPassword + ","
-                + this.UserRealName + ","
-                + this.UserEmail + ","
-                + this.UserNickName + ","
-                + this.UserStatus;
+        return " '" + this.UserId + "','"
+                + this.UserName + "','"
+                + this.UserPassword + "','"
+                + this.UserRealName + "','"
+                + this.UserEmail + "','"
+                + this.UserNickName + "','"
+                + this.UserStatus + "'";
     }
 }
