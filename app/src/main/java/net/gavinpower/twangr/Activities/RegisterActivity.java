@@ -9,17 +9,15 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import net.gavinpower.Models.User;
+import net.gavinpower.Security.AESEncrypt;
 import net.gavinpower.twangr.R;
 import net.gavinpower.twangr.TwangR;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-
 import static net.gavinpower.twangr.TwangR.HubConnection;
+import static net.gavinpower.twangr.TwangR.currentActivity;
 import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.Security.AESEncrypt.generateKeyFromPassword;
 import static net.gavinpower.Security.AESEncrypt.generateSalt;
-import static net.gavinpower.Security.AESEncrypt.encrypt;
 import static net.gavinpower.Security.AESEncrypt.generateKey;
 import static net.gavinpower.Security.AESEncrypt.saltString;
 import static net.gavinpower.Security.AESEncrypt.PASSWORD;
@@ -58,7 +56,7 @@ public class RegisterActivity extends Activity {
         try {
             if (PASSWORD_BASED_KEY) {
                 String salt = saltString(generateSalt());
-                key = generateKeyFromPassword(PASSWORD, salt);
+                key = AESEncrypt.keys(PASSWORD);
             } else {
                 key = generateKey();
             }
@@ -83,57 +81,93 @@ public class RegisterActivity extends Activity {
         String userRealName = editRealName.getText().toString();
         String userNickName = editNickName.getText().toString();
         boolean validated = true;
+        String errorText = "";
 
         if(userName.length() < 4)
         {
             validated = false;
-            Toast.makeText(this, "UserName must be longer than 4 characters!", Toast.LENGTH_LONG).show();
+            errorMessage("UserName must be longer than 4 characters!");
         }
         else if(userPassword.length() < 6)
         {
             validated = false;
-            Toast.makeText(this, "Password must be longer than 6 characters!", Toast.LENGTH_LONG).show();
+            errorMessage("Password must be longer than 6 characters!");
         }
         else if(!userPassword.equals(confirmPassword))
         {
             validated = false;
-            Toast.makeText(this, "The password and confirmation are different!", Toast.LENGTH_LONG).show();
+            errorMessage("The password and confirmation are different!");
         }
         else if (!userEmail.contains("@") || !userEmail.contains("."))
         {
             validated = false;
-            Toast.makeText(this, "Email address is invalid", Toast.LENGTH_LONG).show();
+            errorMessage("Email address is invalid");
         }
         else if(userRealName.length() < 1)
         {
             validated = false;
-            Toast.makeText(this, "Your real name is required", Toast.LENGTH_LONG).show();
+            errorMessage("Your real name is required");
         }
 
         if(validated) {
             try {
-                userPassword = encrypt(userPassword, key).toString();
+                //userPassword = encrypt(userPassword, key).toString();
+                loading.setMessage("Registering. Please Wait");
                 loading.show();
                 HubConnection.register(userName, userPassword, userEmail, userRealName, userNickName);
-            }
-            catch(UnsupportedEncodingException | GeneralSecurityException ex)
-            {
-                ex.printStackTrace();
+            } catch (Exception ex) {
+                loading.dismiss();
+                runOnUiThread(new Runnable() {
+                                  @Override
+                                  public void run() {
+                                      Toast.makeText(currentActivity, "There was a problem registering. Please check your data connection!", Toast.LENGTH_LONG).show();
+                                  }
+                              }
+
+                );
             }
         }
+        else
+        {
+            final String error = errorText;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(currentActivity, error, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
+
+    public void errorMessage(final String message)
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(currentActivity, message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 
     public void registerSuccess(User user)
     {
         loading.dismiss();
         currentUser = user;
-        startActivity(new Intent(this, ChatActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
     }
 
-    public void registerFailure(String reason)
+    public void registerFailure(final String reason)
     {
         loading.dismiss();
-        Toast.makeText(this, reason, Toast.LENGTH_LONG).show();
+        runOnUiThread(new Runnable() {
+                          @Override
+                          public void run() {
+                              Toast.makeText(currentActivity, reason, Toast.LENGTH_LONG).show();
+                          }
+                      }
+
+        );
     }
 
 

@@ -7,14 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import net.gavinpower.ListAdaptors.FriendListAdaptor;
-import net.gavinpower.ListAdaptors.StatusListAdaptor;
+import net.gavinpower.Utilities.FriendListAdaptor;
+import net.gavinpower.Models.User;
 import net.gavinpower.Models.Users;
 import net.gavinpower.twangr.R;
 
-import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentActivity;
-import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.twangr.TwangR.onlineFriends;
 
 public class OnlineFriendsFrag extends Fragment {
@@ -27,6 +25,9 @@ public class OnlineFriendsFrag extends Fragment {
         currentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if(users.size() == 0)
+                    users.add(new User(0, "Try searching for more above", "", "You have no online friends :(", "", "", ""));
+
                 listView = (ListView)currentActivity.findViewById(R.id.onlinefriends);
                 adaptor = new FriendListAdaptor(currentActivity, listView, users);
                 listView.setAdapter(adaptor);

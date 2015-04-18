@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import android.content.Intent;
 import android.database.MatrixCursor;
+import android.os.AsyncTask;
 import android.provider.BaseColumns;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
@@ -19,25 +20,22 @@ import android.view.View;
 import android.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 
-import net.gavinpower.Models.Statuses;
 import net.gavinpower.Models.Users;
+import net.gavinpower.twangr.Fragments.ActiveChatsFrag;
 import net.gavinpower.twangr.Fragments.NewsFeedFrag;
-import net.gavinpower.twangr.Fragments.OnlineFriendsFrag;
 import net.gavinpower.twangr.Fragments.ProfileFrag;
 import net.gavinpower.twangr.R;
-import net.gavinpower.twangr.TwangR;
 
 import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentActivity;
 import static net.gavinpower.twangr.TwangR.currentUser;
+import static net.gavinpower.twangr.TwangR.myPosts;
+import static net.gavinpower.twangr.TwangR.newsFeed;
 
 
 public class MainActivity extends ActionBarActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
-    private TwangR twangR;
-    private Statuses myPosts;
-    private Statuses newsFeed;
+
     private Users Suggestions;
     private SimpleCursorAdapter searchAdaptor;
 
@@ -45,18 +43,10 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        twangR = (TwangR)getApplication();
-        twangR.setActivity(this);
-
-        myPosts = new Statuses();
-        newsFeed = new Statuses();
-        if(currentUser == null)
-        {
-            startActivity(new Intent(this, LoginActivity.class));
-        }
+        currentActivity = this;
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        ViewPager mViewPager; mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         mViewPager.setCurrentItem(1);
@@ -67,14 +57,27 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void onResume()
     {
         super.onResume();
         currentActivity = this;
-        HubConnection.getMyPosts(currentUser.getUserId());
-        HubConnection.getNewsFeed(currentUser.getUserId());
-        HubConnection.getFriendsList(currentUser.getUserId());
-        HubConnection.getFriendRequests(currentUser.getUserId());
+
+        new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] params) {
+                myPosts.getMyPosts();
+                newsFeed.getNewsFeed();
+                HubConnection.getFriendsList(currentUser.getUserId());
+                HubConnection.getFriendRequests(currentUser.getUserId());
+                HubConnection.getChats();
+                ((NewsFeedFrag)mSectionsPagerAdapter.getItem(1)).populateNewsFeed();
+                ((ProfileFrag)mSectionsPagerAdapter.getItem(0)).populateMyPosts();
+                return null;
+            }
+        }.execute();
+
+
     }
 
     public void addPost(View view)
@@ -86,21 +89,6 @@ public class MainActivity extends ActionBarActivity {
     {
         startActivity(new Intent(this, FriendsListActivity.class));
     }
-
-    public void populateNewsFeed(Statuses statuses)
-    {
-        this.newsFeed = statuses;
-        ((NewsFeedFrag)mSectionsPagerAdapter.getItem(1)).populateNewsFeed(statuses);
-    }
-
-    public void populateProfile(Statuses statuses)
-    {
-        this.myPosts = statuses;
-        ((ProfileFrag)mSectionsPagerAdapter.getItem(0)).populateMyPosts(statuses);
-    }
-
-    public Statuses getMyPosts() { return myPosts; }
-    public Statuses getNewsFeed() { return newsFeed; }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -176,7 +164,7 @@ public class MainActivity extends ActionBarActivity {
             {
                 case 0: return new ProfileFrag();
                 case 1: return new NewsFeedFrag();
-                case 2: return new OnlineFriendsFrag();
+                case 2: return new ActiveChatsFrag();
                 default: return new Fragment();
             }
         }
