@@ -49,12 +49,20 @@ public class FriendsListActivity extends ActionBarActivity {
     public void refreshRequestList()
     {
         HubConnection.getFriendRequests(currentUser.getUserId());
+
+        if(friendRequests.size() == 0)
+            FriendRequests.setVisibility(View.INVISIBLE);
+        else
+            FriendRequests.setVisibility(View.VISIBLE);
+
         RequestAdaptor = new FriendRequestAdaptor(currentActivity, FriendRequests, friendRequests);
         FriendRequests.setAdapter(RequestAdaptor);
     }
 
     public void refreshFriendList()
     {
+        if(friendList.size() == 0)
+            friendList.add(new User(0, "", "Use the search bar above to find some!", "", "You have no Friends. How sad :(", "", ""));
         FriendsAdaptor = new FriendListAdaptor(currentActivity, FriendRequests, friendList);
         Friends.setAdapter(FriendsAdaptor);
         Friends.setOnItemClickListener(new AdapterView.OnItemClickListener() {

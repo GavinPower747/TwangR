@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import net.gavinpower.Models.User;
+import net.gavinpower.Security.AESEncrypt;
 import net.gavinpower.twangr.R;
 
 import microsoft.aspnet.signalr.client.Action;
@@ -52,7 +53,7 @@ public class LoginActivity extends Activity {
             try {
                 if (PASSWORD_BASED_KEY) {
                     String salt = saltString(generateSalt());
-                    key = generateKeyFromPassword(PASSWORD, salt);
+                    key = AESEncrypt.keys(PASSWORD);
                 } else {
                     key = generateKey();
                 }
@@ -87,10 +88,6 @@ public class LoginActivity extends Activity {
         String password = Password.getText().toString();
         try
         {
-            if(!username.equals("GavinAdmin")) { // GavinAdmin is a seeded account to test login before the implementation of registration
-                //password = encrypt(password, key).toString();
-            }
-
             progressDialog.setMessage("Logging in...");
             progressDialog.show();
             HubConnection.login(username, password);
@@ -143,8 +140,6 @@ public class LoginActivity extends Activity {
                 toast.show();
             }
         });
-
-
     }
 
 

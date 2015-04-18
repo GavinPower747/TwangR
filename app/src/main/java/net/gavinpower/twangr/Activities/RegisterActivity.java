@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import net.gavinpower.Models.User;
+import net.gavinpower.Security.AESEncrypt;
 import net.gavinpower.twangr.R;
 import net.gavinpower.twangr.TwangR;
 
@@ -55,7 +56,7 @@ public class RegisterActivity extends Activity {
         try {
             if (PASSWORD_BASED_KEY) {
                 String salt = saltString(generateSalt());
-                key = generateKeyFromPassword(PASSWORD, salt);
+                key = AESEncrypt.keys(PASSWORD);
             } else {
                 key = generateKey();
             }
@@ -80,6 +81,7 @@ public class RegisterActivity extends Activity {
         String userRealName = editRealName.getText().toString();
         String userNickName = editNickName.getText().toString();
         boolean validated = true;
+        String errorText = "";
 
         if(userName.length() < 4)
         {
@@ -125,6 +127,16 @@ public class RegisterActivity extends Activity {
                 );
             }
         }
+        else
+        {
+            final String error = errorText;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(currentActivity, error, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     public void errorMessage(final String message)
@@ -148,7 +160,6 @@ public class RegisterActivity extends Activity {
     public void registerFailure(final String reason)
     {
         loading.dismiss();
-
         runOnUiThread(new Runnable() {
                           @Override
                           public void run() {

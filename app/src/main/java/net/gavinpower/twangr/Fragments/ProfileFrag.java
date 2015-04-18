@@ -13,6 +13,7 @@ import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.twangr.TwangR.currentActivity;
 import static net.gavinpower.twangr.TwangR.myPosts;
 
+import net.gavinpower.Models.Status;
 import net.gavinpower.Models.Statuses;
 import net.gavinpower.Utilities.StatusListAdaptor;
 import net.gavinpower.twangr.R;

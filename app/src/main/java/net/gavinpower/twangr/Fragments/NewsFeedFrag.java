@@ -6,14 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-
 import net.gavinpower.Utilities.StatusListAdaptor;
-import net.gavinpower.Models.Statuses;
 import net.gavinpower.twangr.R;
-
-import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentActivity;
-import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.twangr.TwangR.newsFeed;
 
 
