@@ -8,7 +8,10 @@ public class Status {
     public int StatusLikes ;
     public String LogDate;
 
-    public Status(int statusId, String statusContent, int statusLikes, int statusAuthorID,String statusAuthor, String logDate) {
+    public Status() {}
+
+    public Status(int statusId, String statusContent, int statusLikes, int statusAuthorID,String statusAuthor, String logDate)
+    {
         StatusId = statusId;
         StatusContent = statusContent;
         StatusLikes = statusLikes;
@@ -17,52 +20,36 @@ public class Status {
         LogDate = logDate;
     }
 
-    public int getStatusId() {
-        return StatusId;
+    public String toDBFields()
+    {
+        return "StatusId, " +
+                "StatusContent, " +
+                "StatusAuthorId," +
+                " StatusAuthor," +
+                //" StatusLikes, " +
+                "LogDate";
     }
 
-    public void setStatusId(int statusId) {
-        StatusId = statusId;
+    public String toDBString()
+    {
+        return " " + this.StatusId + ",'"
+                + this.StatusContent + "',"
+                + this.StatusAuthorID + ",'"
+                + this.StatusAuthor + "','"
+                //+ this.StatusLikes + ",'"
+                + this.LogDate + "'";
     }
 
     public String getStatusContent() {
         return StatusContent;
     }
 
-    public void setStatusContent(String statusContent) {
-        StatusContent = statusContent;
-    }
-
-    public int getStatusAuthorID() {
-        return StatusAuthorID;
-    }
-
-    public void setStatusAuthorID(int statusAuthorID) {
-        StatusAuthorID = statusAuthorID;
-    }
-
     public String getStatusAuthor() {
         return StatusAuthor;
     }
 
-    public void setStatusAuthor(String statusAuthor) {
-        StatusAuthor = statusAuthor;
-    }
-
-    public int getStatusLikes() {
-        return StatusLikes;
-    }
-
-    public void setStatusLikes(int statusLikes) {
-        StatusLikes = statusLikes;
-    }
-
     public String getLogDate() {
         return LogDate;
-    }
-
-    public void setLogDate(String logDate) {
-        LogDate = logDate;
     }
 
     @Override

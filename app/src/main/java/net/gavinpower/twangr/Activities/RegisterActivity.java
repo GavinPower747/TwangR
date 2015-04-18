@@ -13,15 +13,11 @@ import net.gavinpower.Security.AESEncrypt;
 import net.gavinpower.twangr.R;
 import net.gavinpower.twangr.TwangR;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-
 import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentActivity;
 import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.Security.AESEncrypt.generateKeyFromPassword;
 import static net.gavinpower.Security.AESEncrypt.generateSalt;
-import static net.gavinpower.Security.AESEncrypt.encrypt;
 import static net.gavinpower.Security.AESEncrypt.generateKey;
 import static net.gavinpower.Security.AESEncrypt.saltString;
 import static net.gavinpower.Security.AESEncrypt.PASSWORD;
@@ -90,38 +86,45 @@ public class RegisterActivity extends Activity {
         if(userName.length() < 4)
         {
             validated = false;
-            errorText = "UserName must be longer than 4 characters!";
+            errorMessage("UserName must be longer than 4 characters!");
         }
         else if(userPassword.length() < 6)
         {
             validated = false;
-            errorText = "Password must be longer than 6 characters!";
+            errorMessage("Password must be longer than 6 characters!");
         }
         else if(!userPassword.equals(confirmPassword))
         {
             validated = false;
-            errorText = "The password and confirmation are different!";
+            errorMessage("The password and confirmation are different!");
         }
         else if (!userEmail.contains("@") || !userEmail.contains("."))
         {
             validated = false;
-            errorText = "Email address is invalid";
+            errorMessage("Email address is invalid");
         }
         else if(userRealName.length() < 1)
         {
             validated = false;
-            errorText = "Your real name is required";
+            errorMessage("Your real name is required");
         }
 
         if(validated) {
             try {
-                /*userPassword = encrypt(userPassword, key).toString();*/
+                //userPassword = encrypt(userPassword, key).toString();
+                loading.setMessage("Registering. Please Wait");
                 loading.show();
-                HubConnection.register(userName, userPassword,  userRealName, userEmail, userNickName);
-            }
-            catch(Exception ex)
-            {
-                ex.printStackTrace();
+                HubConnection.register(userName, userPassword, userEmail, userRealName, userNickName);
+            } catch (Exception ex) {
+                loading.dismiss();
+                runOnUiThread(new Runnable() {
+                                  @Override
+                                  public void run() {
+                                      Toast.makeText(currentActivity, "There was a problem registering. Please check your data connection!", Toast.LENGTH_LONG).show();
+                                  }
+                              }
+
+                );
             }
         }
         else
@@ -136,6 +139,17 @@ public class RegisterActivity extends Activity {
         }
     }
 
+    public void errorMessage(final String message)
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(currentActivity, message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
     public void registerSuccess(User user)
     {
         loading.dismiss();
@@ -147,12 +161,13 @@ public class RegisterActivity extends Activity {
     {
         loading.dismiss();
         runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(currentActivity, reason, Toast.LENGTH_LONG).show();
-            }
-        });
+                          @Override
+                          public void run() {
+                              Toast.makeText(currentActivity, reason, Toast.LENGTH_LONG).show();
+                          }
+                      }
 
+        );
     }
 
 

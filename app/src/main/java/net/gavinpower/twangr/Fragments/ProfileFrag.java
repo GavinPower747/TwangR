@@ -11,10 +11,11 @@ import android.widget.TextView;
 import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.twangr.TwangR.currentActivity;
+import static net.gavinpower.twangr.TwangR.myPosts;
 
 import net.gavinpower.Models.Status;
 import net.gavinpower.Models.Statuses;
-import net.gavinpower.ListAdaptors.StatusListAdaptor;
+import net.gavinpower.Utilities.StatusListAdaptor;
 import net.gavinpower.twangr.R;
 
 public class ProfileFrag extends Fragment {
@@ -32,22 +33,17 @@ public class ProfileFrag extends Fragment {
     public void onResume()
     {
         super.onResume();
-
-        HubConnection.getMyPosts(currentUser.getUserId());
+        myPosts.getMyPosts();
+        adaptor.notifyDataSetChanged();
     }
 
-    public void populateMyPosts(final Statuses statuses)
+    public void populateMyPosts()
     {
-        currentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(statuses.size() == 0)
-                    statuses.add(new Status(0, "Why not post something now?", 0, 0, "You have not posted anything yet.", ""));
-                status = (ListView)currentActivity.findViewById(R.id.myProfileStatus);
-                adaptor = new StatusListAdaptor(currentActivity, statuses);
-                status.setAdapter(adaptor);
-            }
-        });
+        try {
+            adaptor.notifyDataSetChanged();
+        }
+        catch(NullPointerException npe)
+        {}
     }
 
     @Override
@@ -59,6 +55,10 @@ public class ProfileFrag extends Fragment {
 
         RealName.setText(currentUser.getUserRealName());
         NickName.setText("(" + currentUser.getUserNickName() + ")");
+
+        status = (ListView)rootView.findViewById(R.id.myProfileStatus);
+        adaptor = new StatusListAdaptor(currentActivity, myPosts);
+        status.setAdapter(adaptor);
         return rootView;
     }
 }
