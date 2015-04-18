@@ -7,15 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import net.gavinpower.ListAdaptors.FriendListAdaptor;
-import net.gavinpower.ListAdaptors.StatusListAdaptor;
+import net.gavinpower.Utilities.FriendListAdaptor;
 import net.gavinpower.Models.User;
 import net.gavinpower.Models.Users;
 import net.gavinpower.twangr.R;
 
-import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentActivity;
-import static net.gavinpower.twangr.TwangR.currentUser;
 import static net.gavinpower.twangr.TwangR.onlineFriends;
 
 public class OnlineFriendsFrag extends Fragment {

@@ -41,4 +41,5 @@
     <string name="FriendsList_FriendsLabel">My Friends</string>
     <string name="FriendsList_AcceptFriend">Accept</string>
     <string name="FriendsList_DeclineFriend">Decline</string>
+    <string name="title_activity_splash">splash</string>
 </resources>

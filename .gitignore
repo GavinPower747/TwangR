@@ -54,3 +54,5 @@ Temporary Items
 .gradle/2.2.1/taskArtifacts/taskArtifacts.bin
 build/intermediates/model_data.bin
 app/src/main/java/net/gavinpower/twangr/Fragments/OnlineFriendsFrag.java
+build/intermediates/model_data.bin
+local.properties

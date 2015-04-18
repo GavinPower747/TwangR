@@ -2,18 +2,39 @@
 <items version="2" >
 
     <item
-        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast\7.0.0\classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
-        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-1440507f945da8730656738b253bcee7976481cf.jar" />
+        sha1="4cd0b093824b3228fffc21ea369b98d0b1db6566">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-9f845fc45c76324e859935065462f8f37f6ebc2c.jar" />
     </item>
     <item
-        jar="C:\dev\TwangR\app\libs\signalr-client-sdk-android.jar"
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics\7.0.0\classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="a6417809c26c61a7e208100f8284c1acdc398428">
-        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\signalr-client-sdk-android-de9722e80baddcbdf06c78eef1622188464fb78b.jar" />
+        sha1="29fd6d3794b71491c2789708cd8d03c71feb8954">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-309e23a01f92e998fd7bde0c9e4a2378931ed0f2.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4c93d99d454c975536bbe3b42283eee847f03ea3">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-b2e33c5c686004ddb49f02cdbc805ea000f9258c.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-panorama\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1c5a76debf0c2857ccad422c4a80ed785982f8df">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-534af97e2713bd4556754ff094a31e9c0811c78e.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="73ccb92b70112f2e463e415ef8d7275de7da6516">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-831acee46740e20d1a7f76e93825390fc5b380a0.jar" />
     </item>
     <item
         jar="C:\dev\TwangR\app\libs\gson-2.2.2.jar"
@@ -23,11 +44,11 @@
         <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\gson-2.2.2-6a754a9700fb85e1d845df40e855b6459f6a5798.jar" />
     </item>
     <item
-        jar="C:\Users\New User\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\7.0.0\classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
-        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-30ee13d291b41de2c11e177294be7b073bc3fafe.jar" />
+        sha1="17f8750d5c0749e44dd7c54aa390d9c937803825">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-037d7cfc05102297308c5476b4a32eb5e6310bfe.jar" />
     </item>
     <item
         jar="C:\dev\TwangR\app\libs\signalr-client-sdk.jar"
@@ -37,18 +58,130 @@
         <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\signalr-client-sdk-74302ffcf09994609bc735fd338e7201b250ba45.jar" />
     </item>
     <item
-        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar"
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-nearby\7.0.0\classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
-        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-d38b2b01b37ee551cbc5fc1c6ae35348cceb7da5.jar" />
+        sha1="ef5f051e7308febe289dc93c67c5f32785b4260a">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-379a93fc2a6138a46dcd957bc04d07247dd19253.jar" />
     </item>
     <item
-        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.3\classes.jar"
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\7.0.0\classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
-        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-133caad6bfab73fb0ef102bc2f6c1120c8438f53.jar" />
+        sha1="e3d791b42eaa90416cd0b2d2e608092794a3baa4">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-9186fd59c1381e8f5b10cb6dc85b77765e9befe1.jar" />
+    </item>
+    <item
+        jar="C:\Users\New User\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\22.0.0\support-annotations-22.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\support-annotations-22.0.0-fef79368a9ebf13027b98ac903448b514b024502.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-identity\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="fb04b12526b0073c7fb1ebb70c5842d82ee95596">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-69b4b7aed0741b1749299d3d046963ee58d4d2e8.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.0.0\libs\internal_impl-22.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b5b92f469d515a13d778900f6d50c03d12f35504">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\internal_impl-22.0.0-ccd6bf8e835d37d73c69fd3b2d1e1ffc564c497a.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-drive\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="41b3870cbe5fa546d8095b5b89d42cb69f3dd175">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-41bb82bdcb01628311181483a1a1935b343a5084.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-gcm\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9224bc4c54ba95147c7eabd874573763c07cb6be">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-54976ae79c71006f59c553b73414c969898c528a.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\libs\signalr-client-sdk-android.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a6417809c26c61a7e208100f8284c1acdc398428">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\signalr-client-sdk-android-de9722e80baddcbdf06c78eef1622188464fb78b.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-safetynet\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="c976518693e89ad44fbfccfc654941eaec198d08">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-a12aac55ac71c7256cce03c11855be89a32d9e4a.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appstate\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="7ff613bf78ab057293892fdbd4169eda899c89b9">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-289391da161a500d78caa2509efccc29c94f7f22.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\22.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="d84409890828e07d344a3b9b1da545dba9897b51">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-2e65e8802c3ab43929cdec8fb7c0546aa82a6169.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wearable\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3033cc3a2c68dff3e5b646d6d084bdbdf7d00b25">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-804eb45bd8edc7200ec20b97fbdf0d8e88104751.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a08d65794b844d8e7540bf9a33859bf3b2482d7f">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-c0a1f153b2d82c2392a2f77adff89338214fc4cb.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wallet\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a96b762bde4139de855735f175ec4d17dca55a6d">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-ff1d1dd2f04f9deb67d624c27ea7d4c02806bfc3.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-games\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="055783146ba9654a725442563be78cad303aad1f">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-ead7922ebd717e522379402c8f3de85e23d9735f.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-plus\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0e8228b4bc69c6a2c8d7c18498a77e53417d2574">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-dccaac7ae9d7cb1744212122f4fd685b4119c807.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-fitness\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3c0b099f9de16b265ecd6122fcb603e7d0d29f90">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-b52f84c362fcb195cabcf3f7b1d7402eb80a8410.jar" />
+    </item>
+    <item
+        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4e86306289ace4aa0cfec44a05ed2b410d36989d">
+        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-856aabd732590cba64228a97fdfe35c5c8c8054d.jar" />
     </item>
 
 </items>

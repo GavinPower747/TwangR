@@ -6,12 +6,13 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Toast;
 
 import net.gavinpower.Database.DBManager;
 import net.gavinpower.SignalR.Connection;
 import net.gavinpower.Tasks.SignalRConnection;
-import net.gavinpower.twangr.TwangR;
+import net.gavinpower.twangr.R;
 
 import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentActivity;
@@ -26,11 +27,16 @@ public class Base extends Activity
     public NetworkInfo Wifi;
     public NetworkInfo MobileData;
 
+    public final int SPLASH_DISPLAY_LENGTH = 600;
+
     @Override
     @SuppressWarnings("Unchecked")
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+
+
         currentActivity = this;
         ConnectivityManager mgr = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 
@@ -45,14 +51,22 @@ public class Base extends Activity
         }
         repo = new DBManager(currentActivity);
         repo.open();
+
+
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        startActivity(new Intent(this, LoginActivity.class));
-        finish();
+        new Handler().postDelayed(new Runnable(){
+            @Override
+            public void run() {
+                Intent mainIntent = new Intent(Base.this,LoginActivity.class);
+                startActivity(mainIntent);
+                finish();
+            }
+        }, SPLASH_DISPLAY_LENGTH);
     }
 
 }
