@@ -2,53 +2,53 @@
 <items version="2" >
 
     <item
-        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
-        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-1440507f945da8730656738b253bcee7976481cf.jar" />
-    </item>
-    <item
-        jar="C:\dev\TwangR\app\libs\signalr-client-sdk-android.jar"
+        jar="C:\Users\Emily\Documents\GitHub\TwangR\app\libs\signalr-client-sdk-android.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="a6417809c26c61a7e208100f8284c1acdc398428">
-        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\signalr-client-sdk-android-de9722e80baddcbdf06c78eef1622188464fb78b.jar" />
+        <dex dex="C:\Users\Emily\Documents\GitHub\TwangR\app\build\intermediates\pre-dexed\debug\signalr-client-sdk-android-3d70a6fd4e3caf6bb0be3d624441beab9fe61244.jar" />
     </item>
     <item
-        jar="C:\dev\TwangR\app\libs\gson-2.2.2.jar"
+        jar="C:\Users\Emily\Documents\GitHub\TwangR\app\libs\gson-2.2.2.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="53bfcd3c8e310d1493b2691484525ed90b04e236">
-        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\gson-2.2.2-6a754a9700fb85e1d845df40e855b6459f6a5798.jar" />
+        <dex dex="C:\Users\Emily\Documents\GitHub\TwangR\app\build\intermediates\pre-dexed\debug\gson-2.2.2-65b33e7317da27b29cc49f65624c1293bb685fa0.jar" />
     </item>
     <item
-        jar="C:\Users\New User\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
-        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-30ee13d291b41de2c11e177294be7b073bc3fafe.jar" />
-    </item>
-    <item
-        jar="C:\dev\TwangR\app\libs\signalr-client-sdk.jar"
+        jar="C:\Users\Emily\Documents\GitHub\TwangR\app\libs\signalr-client-sdk.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="a9ae02bd1a15497aa9222498ae7c6b27a53fa41f">
-        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\signalr-client-sdk-74302ffcf09994609bc735fd338e7201b250ba45.jar" />
+        <dex dex="C:\Users\Emily\Documents\GitHub\TwangR\app\build\intermediates\pre-dexed\debug\signalr-client-sdk-f227a4df0c189419e1c9819d15c12d9672196b41.jar" />
     </item>
     <item
-        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar"
+        jar="C:\Users\Emily\Documents\GitHub\TwangR\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
-        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-d38b2b01b37ee551cbc5fc1c6ae35348cceb7da5.jar" />
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="C:\Users\Emily\Documents\GitHub\TwangR\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-abe294b1d4b84a6918fc97a478e1fc55797a54d3.jar" />
     </item>
     <item
-        jar="C:\dev\TwangR\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.3\classes.jar"
+        jar="C:\Users\Emily\Documents\GitHub\TwangR\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.3\classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
-        <dex dex="C:\dev\TwangR\app\build\intermediates\pre-dexed\debug\classes-133caad6bfab73fb0ef102bc2f6c1120c8438f53.jar" />
+        <dex dex="C:\Users\Emily\Documents\GitHub\TwangR\app\build\intermediates\pre-dexed\debug\classes-9ff00d3931fb6383b995935a5c33e769919e1f52.jar" />
+    </item>
+    <item
+        jar="C:\Users\Emily\Documents\GitHub\TwangR\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="C:\Users\Emily\Documents\GitHub\TwangR\app\build\intermediates\pre-dexed\debug\classes-9351f7c3157061c1f11cd76734cd61983485cf47.jar" />
+    </item>
+    <item
+        jar="C:\Users\Emily\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="C:\Users\Emily\Documents\GitHub\TwangR\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-ed225fac48119fd2c13faed73e2728787deb48e9.jar" />
     </item>
 
 </items>
