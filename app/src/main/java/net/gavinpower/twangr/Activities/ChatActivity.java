@@ -1,28 +1,25 @@
 package net.gavinpower.twangr.Activities;
 
-import java.util.ArrayList;
+
 import java.util.Date;
-import java.util.List;
 
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.content.Intent;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import net.gavinpower.SignalR.Message;
-import net.gavinpower.ListAdaptors.MessageListAdaptor;
+import net.gavinpower.Models.Message;
+import net.gavinpower.Models.Messages;
+import net.gavinpower.Utilities.MessageListAdaptor;
 import net.gavinpower.twangr.R;
 import net.gavinpower.twangr.TwangR;
 
+import microsoft.aspnet.signalr.client.Action;
+
 import static net.gavinpower.twangr.TwangR.HubConnection;
 import static net.gavinpower.twangr.TwangR.currentUser;
+import static net.gavinpower.twangr.TwangR.repo;
 
 public class ChatActivity extends Activity {
 
@@ -31,8 +28,10 @@ public class ChatActivity extends Activity {
     private EditText messageBox;
 
     private MessageListAdaptor adaptor;
-    private List<Message> messageList;
+    private Messages currentMessages;
     private ListView messageContainer;
+
+    private String ChatID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -40,21 +39,23 @@ public class ChatActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        Bundle information = getIntent().getExtras();
+
         TwangR = ((TwangR) getApplicationContext());
         TwangR.setActivity(this);
 
-        if(TwangR.getCurrentUser() == null)
-        {
-            startActivity(new Intent(this, LoginActivity.class));
-        }
-        else {
-            messageBox = (EditText) findViewById(R.id.messageBox);
-            messageContainer = (ListView) findViewById(R.id.list_view_messages);
+        ChatID = information.getString("ChatID");
 
-            messageList = new ArrayList<Message>();
-            adaptor = new MessageListAdaptor(this, messageList);
-            messageContainer.setAdapter(adaptor);
-        }
+        messageBox = (EditText) findViewById(R.id.messageBox);
+        messageContainer = (ListView) findViewById(R.id.list_view_messages);
+
+        currentMessages =  new Messages();
+        adaptor = new MessageListAdaptor(this, currentMessages);
+        messageContainer.setAdapter(adaptor);
+
+        currentMessages.getMessagesByChatId(ChatID);
+        adaptor.notifyDataSetChanged();
+
     }
 
     @Override
@@ -62,53 +63,42 @@ public class ChatActivity extends Activity {
     {
         super.onResume();
         TwangR.setActivity(this);
-        if(TwangR.getCurrentUser() == null)
-        {
-            startActivity(new Intent(this, LoginActivity.class));
-        }
+
+        currentMessages.getMessagesByChatId(ChatID);
     }
 
 
-    public void addMessageToContainer(final Message message)
+    public void addMessageToContainer(final Message message, String ChatId)
     {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run()
-            {
-                messageList.add(message);
-                adaptor.notifyDataSetChanged();
-                if(!message.isSelf())
-                    notifyUser(message);
-            }
+        if(ChatId.equals(this.ChatID)) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    currentMessages.add(message);
+                    adaptor.notifyDataSetChanged();
+                }
 
-        });
+            });
+        }
+        else
+        {
+            //Notify
+        }
     }
 
     public void Send(View view)
     {
         String message = messageBox.getText().toString();
-        Message msg = new Message(currentUser.getUserRealName() + HubConnection.getMessageCount(), currentUser.getUserRealName(), message, true, new Date());
-        addMessageToContainer(msg);
-        HubConnection.Send(msg);
+        Message msg = new Message(currentUser.getUserRealName() + HubConnection.getMessageCount(), currentUser.getUserRealName(), message, true, new Date().toString(), ChatID);
+
+        addMessageToContainer(msg, this.ChatID);
+        HubConnection.Send(msg).done(new Action<Message>()
+        {
+            public void run(Message message)
+            {
+                //code for guaranteed delivery here
+            }
+        });
         messageBox.setText("");
-    }
-
-    public void notifyUser(Message m)
-    {
-        NotificationCompat.Builder noteBuild = new NotificationCompat.Builder(this);
-        noteBuild.setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle(m.getSender())
-                .setContentText(m.getMessage());
-
-        NotificationManager noteManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        noteManager.notify(0, noteBuild.build());
-
-        try {
-            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-            r.play();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

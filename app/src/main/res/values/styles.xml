@@ -10,7 +10,10 @@
 
 <style name="AppTheme" parent ="AppBaseTheme">
     <resources>
-        <style name="button" parent="@android:style/Widget.Button">
+
+        <item name="android:textColorPrimary">#ffffff</item>
+
+           <style name="Button" parent="@android:style/btnEnabled">
             <item name="android:gravity">center_vertical|center_horizontal</item>
             <item name="android:textColor">#FFFFFFFF</item>
             <item name="android:shadowColor">#FF000000</item>
@@ -25,7 +28,13 @@
 
         </style>
 
-
+        <style name="Widget" parent="@style/Theme.Sherlock">
+            <item name="android:background">#000000</item> <!-- This line is changing the actionbar color -->
+            <item name="android:windowBackground">#000000</item>
+            <item name="android:colorBackground">#000000</item>
+            <item name="actionBarStyle">@style/Widget.MyTheme.ActionBar</item>
+            <item name="android:actionBarStyle">@style/Widget.MyTheme.ActionBar</item>
+        </style>
 
     </resources>
 

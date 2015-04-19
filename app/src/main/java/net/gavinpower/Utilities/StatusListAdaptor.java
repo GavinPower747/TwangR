@@ -1,4 +1,4 @@
-package net.gavinpower.ListAdaptors;
+package net.gavinpower.Utilities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
