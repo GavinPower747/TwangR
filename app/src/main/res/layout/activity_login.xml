@@ -24,17 +24,21 @@
         android:id="@+id/UserName"
         android:layout_alignBottom="@+id/UserNameEdit"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:height="30px"
+        android:textSize="50px"
+        android:layout_alignTop="@+id/UserNameEdit" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Password"
         android:id="@+id/Password"
-        android:layout_below="@+id/UserName"
-        android:layout_alignRight="@+id/UserName"
-        android:layout_alignEnd="@+id/UserName"
-        android:layout_marginTop="66dp" />
+        android:height="100px"
+        android:textSize="50px"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -47,28 +51,28 @@
         android:layout_alignStart="@+id/UserNameEdit" />
 
     <Button
-        style="?android:attr/buttonStyleSmall"
+        android:background="@drawable/btnEnabled"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Register"
         android:id="@+id/register"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="63dp"
+        android:onClick="register"
+        android:textSize="80px"
         android:layout_below="@+id/passwordEdit"
-        android:layout_alignRight="@+id/passwordEdit"
-        android:layout_alignEnd="@+id/passwordEdit"
-        android:layout_marginRight="55dp"
-        android:layout_marginEnd="55dp"
-        android:onClick="register" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <Button
-        style="?android:attr/buttonStyleSmall"
+        android:background="@drawable/btnEnabled"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Login"
         android:id="@+id/loginButton"
+        android:onClick="Login"
+        android:textSize="80px"
         android:layout_alignTop="@+id/register"
-        android:layout_toRightOf="@+id/Password"
-        android:layout_toEndOf="@+id/Password"
-        android:onClick="Login" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
