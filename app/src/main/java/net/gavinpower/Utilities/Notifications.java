@@ -28,7 +28,7 @@ public class Notifications
             Intent notificationIntent = new Intent(context, FriendsListActivity.class);
             PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             NotificationCompat.Builder noteBuild = new NotificationCompat.Builder(context);
-            noteBuild.setSmallIcon(R.drawable.ic_launcher)
+            noteBuild.setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle("New Friend Request!")
                     .setContentText(newFriend + " wants to be your friend!")
                     .setContentIntent(contentIntent);
@@ -57,7 +57,7 @@ public class Notifications
             Intent notificationIntent = new Intent(context, FriendsListActivity.class);
             PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             NotificationCompat.Builder noteBuild = new NotificationCompat.Builder(context);
-            noteBuild.setSmallIcon(R.drawable.ic_launcher)
+            noteBuild.setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle("New Friend Request!")
                     .setContentText(newFriend + " wants to be your friend!")
                     .setContentIntent(contentIntent);
@@ -88,7 +88,7 @@ public class Notifications
             notificationIntent.putExtras(extras);
             PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             NotificationCompat.Builder noteBuild = new NotificationCompat.Builder(context);
-            noteBuild.setSmallIcon(R.drawable.ic_launcher)
+            noteBuild.setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle("Message from " + sender)
                     .setContentText(message)
                     .setContentIntent(contentIntent);
